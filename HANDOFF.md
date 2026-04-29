@@ -1,137 +1,200 @@
 # HANDOFF — Setlists PJ + EV
 
-Snapshot de análise gerado em 2026-04-29, antes da formatação do PC.
-Este documento descreve o projeto, suas dependências e como restaurá-lo
-em qualquer máquina.
+Atualizado em **2026-04-29**.
+
+Snapshot completo do projeto: o que é, onde mora, o que está feito, o
+que ainda falta e como retomar do zero. Tudo aqui é versionado junto
+com o código.
 
 ---
 
-## 1. O que é
+## 1. Status atual: ONLINE 🟢
 
-Site estático single-file que cataloga shows do Pearl Jam + Eddie Vedder
-assistidos pelo dono do projeto. Mostra setlists, capas de álbuns,
-posters oficiais, fotos pessoais e vídeos por show. Filtros por artista
-e ano, lightbox de imagens, tema claro/escuro.
+| Recurso | URL / Local | Status |
+|---|---|---|
+| **Site no ar** | https://setlists-pj-ev.pages.dev/ | ✅ |
+| **Repo Git** | https://github.com/azimermann4/setlists-pj-ev | ✅ público |
+| **Pasta local** | `C:\Users\FourD\Downloads\setlists-pj-ev` | ✅ |
+| **Deploy automático** | Cloudflare Pages → push em `main` reimplanta em ~1 min | ✅ |
+| **HTTPS** | Cloudflare auto-provisionado | ✅ |
+| **Identidade do git (local repo)** | `andrezimermann <eng.andrehz@gmail.com>` | configurado por repo |
 
-## 2. Estrutura de arquivos
+Cada `git push` no `main` atualiza o site sozinho. Não precisa fazer
+mais nada manual pra publicar mudanças.
+
+## 2. O que é
+
+Site estático single-file que cataloga shows do Pearl Jam + Eddie
+Vedder assistidos pelo dono. Mostra setlists, capas de álbuns, posters
+oficiais, fotos pessoais e vídeos por show. Filtros por artista e ano,
+lightbox de imagens, drawer com setlist completo, tema claro/escuro
+(default claro).
+
+**Visual atual:** **Ticket Archive** (versão B do redesign do Claude
+Designs — papel kraft, perfurações, stubs de ingresso, fontes Big
+Shoulders + Oswald + Caveat, animações em cascata, selo "ARCHIVED"
+carimbando ao abrir o drawer, `prefers-reduced-motion` respeitado).
+
+## 3. Estrutura de arquivos
 
 ```
 setlists-pj-ev/
-├── index.html              # 159 KB — app completo (HTML+CSS+JS+DADOS)
-├── media-manifest.json     #   1 KB — referência humana do manifest
-├── README.txt              # instruções de uso
+├── index.html              # 342 KB, 4878 linhas — app completo (HTML+CSS+JS+DADOS+lyrics)
+├── media-manifest.json     # 4 KB — referência humana do manifest (cópia)
+├── README.txt              # instruções de uso original
 ├── HANDOFF.md              # este arquivo
-└── media/                  # 25 MB total, 385 arquivos
-    ├── albums/             # 12 capas de álbuns (ten.jpg, vs.jpg, ...)
-    ├── pj-YYYY-MM-DD/      # uma pasta por show Pearl Jam
-    │   ├── poster.jpg
-    │   ├── poster-1.jpg, poster-2.jpg ...   (quando há múltiplos)
-    │   ├── photo-N.jpg          # full size (~1200px)
-    │   ├── photo-N-thumb.jpg    # miniatura (~400px)
-    │   ├── mine/                # fotos pessoais (estrutura pronta, vazia hoje)
-    │   └── videos/              # MP4s (estrutura pronta, vazia hoje)
-    └── ev-YYYY-MM-DD/      # mesma estrutura para Eddie Vedder solo
+├── MEDIA_AUDIT_2026-04-29.md  # auditoria de gaps de mídia (gerada por subagente)
+├── .gitignore              # ignora .claude/, *.zip, Thumbs.db, etc
+└── media/                  # 222 MB total
+    ├── albums/             # 16 capas (12 antigas + 4 novas: earthling, gigaton, intowild, ukulele)
+    ├── lyrics.json         # arquivo de letras (novo, do redesign)
+    ├── pj-YYYY-MM-DD/      # 17 shows Pearl Jam
+    │   ├── poster.jpg + (poster-1.jpg, poster-2.jpg, ...)
+    │   ├── photo-N.jpg + photo-N-thumb.jpg
+    │   ├── mine/photo-N.jpg + thumb (vazio na maioria — ver §6)
+    │   └── videos/video-N.mp4 (só 2024-08-29 e 2024-08-31)
+    └── ev-YYYY-MM-DD/      # 8 shows Eddie Vedder
 ```
 
-## 3. Dependências
+## 4. Dependências externas
 
-| Tipo                | Item                          | Status                 |
-|---------------------|-------------------------------|------------------------|
-| Runtime             | Browser moderno               | Qualquer Chromium/FF   |
-| CDN externo         | Google Fonts (fonts.googleapis.com) | Opcional, tem fallbacks |
-| Backend             | Nenhum                        | —                      |
-| Build/bundler       | Nenhum                        | —                      |
-| Banco de dados      | Nenhum                        | —                      |
-| node_modules        | Não existe                    | —                      |
-| Persistência local  | localStorage (apenas tema UI) | Não guarda conteúdo    |
+| Tipo | Item | Status |
+|---|---|---|
+| Runtime | Browser moderno | qualquer Chromium/FF |
+| CDN externo | Google Fonts | opcional, com fallbacks |
+| Backend | Nenhum | — |
+| Build/bundler | Nenhum | — |
+| Banco de dados | Nenhum | — |
+| Persistência local | localStorage (apenas tema UI) | não guarda conteúdo |
 
-**Caminhos:** todos relativos (`media/<show-id>/...`). Mover a pasta
-para qualquer lugar funciona sem ajuste.
+Caminhos todos relativos (`media/<show-id>/...`). Mover a pasta para
+qualquer lugar funciona sem ajuste.
 
-## 4. Como rodar
+## 5. Como rodar localmente
 
 **Modo simples:** duplo clique em `index.html`.
 
-**Se o browser bloquear por CORS** (raro, depende do browser):
+**Se o browser bloquear por CORS:**
 ```bash
 cd setlists-pj-ev
 python -m http.server 8000
 # abrir http://localhost:8000
 ```
 
-## 5. Onde os dados moram (importante para edições futuras)
+## 6. Conteúdo atual vs o que falta
 
-Os shows, setlists, álbuns e o manifest de mídia estão **embutidos
-inline em `index.html`** como objetos JS:
+### Shows catalogados: **25**
 
-- `ALBUMS` — definido por volta da linha ~1545
-- `SHOWS` (com setlists) — linha 1547 (objeto longo, ~21 KB)
-- `MEDIA_MANIFEST` — linha 1595
+| Artista | Shows com setlist completo | Status mídia |
+|---|---|---|
+| Pearl Jam | 17 (2005, 2011×4, 2013×3, 2015×5, 2018×2, 2024×2) | fotos oficiais OK; fotos pessoais e MP3s 2005 faltando |
+| Eddie Vedder | 8 (2014×5, 2018×3) | só posters; fotos oficiais e pessoais faltando |
 
-O arquivo `media-manifest.json` é apenas uma cópia para leitura humana.
-Para adicionar fotos/posters/vídeos a um show, **edite `index.html`**
-(o objeto `MEDIA_MANIFEST`), não o JSON externo.
+### Mídia presente no repo (✅)
 
-## 6. Convenções de mídia
+- 16 capas de álbuns
+- Posters de todos os 25 shows
+- Fotos oficiais dos 17 shows PJ + ev-2014-05-06 (385 jpgs)
+- **19 vídeos MP4** dos shows pj-2024-08-29 (6) e pj-2024-08-31 (13)
+- `lyrics.json`
 
-- Foto oficial: `media/<show-id>/photo-N.jpg` + `photo-N-thumb.jpg`
-- Poster único: `media/<show-id>/poster.jpg` (`poster: true` no manifest)
-- Múltiplos posters: `poster-1.jpg`, `poster-2.jpg` ... (`posters: N`)
-- Foto pessoal: `media/<show-id>/mine/photo-N.jpg` + thumb
-- Vídeo pessoal: `media/<show-id>/videos/video-N.mp4`
-- Capa de álbum: `media/albums/<albumId>.jpg`
-  (ids válidos: ten, vs, vitalogy, nocode, yield, binaural, riotact,
-   lostdogs, pj2006, backspacer, lightningbolt, darkmatter)
+### Mídia faltante (⏸️ ver `MEDIA_AUDIT_2026-04-29.md`)
 
-## 7. Estratégia de backup pré-formatação
+| Categoria | Quantidade | Onde provavelmente está |
+|---|---|---|
+| Fotos pessoais (`mine/`) shows 2011-2015 | ~80 arquivos | possivelmente outro PC do dono |
+| Fotos oficiais 7 shows EV novos | ~33 arquivos | possivelmente outro PC |
+| 26 MP3s do show pj-2005-12-02 | 26 | desconhecido — talvez CD/pendrive antigo |
+| `pj-2024-08-31/poster-1.jpg` | 1 | precisa criar (manifest declara 2 posters) |
+| 12 arquivos parcialmente identificados no Drive | 12 | ver §7 |
 
-Execute todas as camadas. Em ordem:
+## 7. Arquivos no Drive prontos pra importar (12 arquivos)
 
-### 7.1 ZIP local
+Auditoria completa em `MEDIA_AUDIT_2026-04-29.md`. Resumo dos IDs:
+
+**Pasta raiz no Drive:** `Pearl Jam` id `1SinuUytmkfTGjPe3LeoChT4BRlP7PGyX`
+
+**Subpastas:**
+- `rio 18` (`1gKGY89gjwRcuBHtRrxHDReQbpqzQmNiM`) → 4 fotos pessoais para `pj-2018-03-21`
+- `sp 18` (`1noYaWzjiQ7QOAOEIhAO6sGtncxpeNByB`) → 4 arquivos misturados (pj-2018-03-24, ev-2018-03-28/-29/-30) — 1 ambiguidade
+- `Teste` (`14jIhGD-PiLcEajn_kxHup3vQpdZi6dQs`) → 3 fotos WhatsApp prováveis para `ev-2014-05-12`
+- `29/08/2024` (`1ip1Re6QwQ_D4atWPDFOidnVGX20rZEgE`) → 1 foto pessoal (já mapeada): id `1Q9oMvVGlJsJUVN_8WIOqG8npu9TlbegH`
+- `31/08/2024` (`1_JuyO_3xIpwqhRsGLygDuBBj0XbbdAr5`) → 1 foto pessoal (já mapeada): id `1C42L5YohQMVrFIHgglt2JWSNRGCN1vH8`
+
+Os 19 vídeos das pastas `29/08/2024` e `31/08/2024` JÁ FORAM IMPORTADOS
+(commit `0efa7b3`).
+
+## 8. Como editar conteúdo
+
+**Adicionar/editar shows, setlists, manifest:**
+- Edite o objeto `MEDIA_MANIFEST` em `index.html:1595` (não o
+  `media-manifest.json` externo — ele é só leitura humana e está
+  dessincronizado por design).
+- Os shows e setlists estão num objeto JS na linha 1547 do `index.html`
+  (~21 KB inline).
+
+**Adicionar mídia:**
+- Coloque o arquivo no caminho esperado pelo manifest:
+  - Foto oficial: `media/<show>/photo-N.jpg` + `photo-N-thumb.jpg`
+  - Foto pessoal: `media/<show>/mine/photo-N.jpg` + thumb
+  - Vídeo: `media/<show>/videos/video-N.mp4`
+  - Áudio: `media/<show>/audio/<filename>.mp3`
+- Aumente o contador correspondente no `MEDIA_MANIFEST` no `index.html`.
+
+**Publicar:**
 ```bash
-cd C:/Users/FourD/Downloads
-# criar ZIP — use o Explorador do Windows (botão direito → Enviar para → Pasta compactada)
-# ou via PowerShell:
-powershell Compress-Archive -Path setlists-pj-ev -DestinationPath setlists-pj-ev-backup-2026-04-29.zip
+git add .
+git commit -m "<mensagem>"
+git push origin main
+# Cloudflare Pages re-implanta em ~1 minuto
 ```
 
-### 7.2 Hash de integridade
+## 9. Próximos passos pendentes (em ordem de prioridade)
+
+1. **Quando chegar em casa:** verificar outro PC. Procurar:
+   - Fotos pessoais antigas (2011-2015)
+   - Fotos dos shows EV novos
+   - 26 MP3s do show pj-2005-12-02 (nomes "01 Go.mp3", "02 Hail Hail.mp3", etc — ver `MEDIA_MANIFEST` em `index.html`)
+2. Importar os 12 arquivos do Drive (§7) — ~10 min de trabalho automatizado
+3. **ZIP backup local** + hash SHA-256 antes de formatar (camada extra de segurança)
+4. **Domínio custom** no Cloudflare Pages (usa subdomínio do Hostinger ou novo)
+5. Procurar `pj-2024-08-31/poster-1.jpg` (apenas 1 arquivo)
+
+## 10. Camadas de backup hoje
+
+| Camada | Onde | Status |
+|---|---|---|
+| 1. Cópia local | `C:\Users\FourD\Downloads\setlists-pj-ev` | ✅ |
+| 2. **Git remoto** | github.com/azimermann4/setlists-pj-ev | ✅ |
+| 3. **Site live** | setlists-pj-ev.pages.dev | ✅ |
+| 4. ZIP local em HD/pendrive | — | ⏸️ recomendado antes de formatar |
+| 5. Cópia em outra nuvem | — | opcional |
+
+**Pode formatar com tranquilidade depois de adicionar a camada 4.** A
+restauração após format é trivial:
 ```bash
-# PowerShell:
-Get-FileHash setlists-pj-ev-backup-2026-04-29.zip -Algorithm SHA256
-# Anote o hash em outro lugar (papel, celular, e-mail)
+git clone https://github.com/azimermann4/setlists-pj-ev.git
 ```
 
-### 7.3 Cópias redundantes (mínimo 2 destinos)
-- [ ] HD externo / pendrive
-- [ ] Google Drive
-- [ ] OneDrive / Dropbox
-- [ ] (Opcional) Repositório Git privado no GitHub
+## 11. Histórico de commits (referência)
 
-### 7.4 Restauração após formatar
-1. Baixar o ZIP de uma das nuvens
-2. Verificar hash SHA-256 — comparar com o anotado
-3. Descompactar
-4. Abrir `index.html` no browser — verificar se renderiza shows e fotos
+```
+0efa7b3  videos shows 2024-08-29 (6) e 2024-08-31 (13) [197 MB]
+d054113  redesign Ticket Archive + 7 shows EV novos + 4 capas + lyrics.json
+7f1062e  snapshot inicial pre-format
+```
 
-## 8. Estado atual do conteúdo (snapshot 2026-04-29)
+## 12. Convenções importantes
 
-- **18 shows catalogados** com mídia (vide `MEDIA_MANIFEST`)
-  - 17 Pearl Jam (2005, 2011, 2013, 2015, 2018, 2024)
-  - 1 Eddie Vedder solo (2014)
-- **12 capas de álbuns** em `media/albums/`
-- **Fotos pessoais (`mine/`)** e **vídeos (`videos/`)** — diretórios
-  criados mas ainda vazios em todos os shows.
-
-## 9. O que NÃO está versionado
-
-- Histórico de mudanças (não há `.git`)
-- Lista de "shows desejados" futuros — só está na cabeça do dono
-- Qualquer rascunho/anotação fora desta pasta
-
-Recomendação forte: depois de restaurar pós-format, rodar
-`git init && git add . && git commit -m "restore"` para ter histórico.
+- **Visibilidade do repo:** público (decisão consciente — capas/posters
+  oficiais ficam indexáveis, fotos pessoais idem)
+- **Identidade git:** `eng.andrehz@gmail.com` configurado **localmente
+  só nesse repo** (config global usa e-mail corporativo)
+- **`.claude/`:** ignorado pelo git — é config local do Claude Code, não
+  pertence ao repo
+- **Animações:** todas respeitam `prefers-reduced-motion`
+- **Tema padrão:** claro (light), com toggle pra escuro
 
 ---
 
-*Gerado por análise automatizada em 2026-04-29.*
+*Gerado por sessão Claude Code em 2026-04-29.*
