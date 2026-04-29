@@ -1,0 +1,75 @@
+{
+  "pj-2011-11-09": {
+    "poster": true,
+    "photos": 6
+  },
+  "pj-2013-04-03": {
+    "poster": true,
+    "photos": 8
+  },
+  "pj-2005-12-02": {
+    "poster": true,
+    "photos": 7
+  },
+  "pj-2013-04-06": {
+    "poster": true,
+    "photos": 8
+  },
+  "pj-2011-11-03": {
+    "poster": true,
+    "photos": 6
+  },
+  "pj-2011-11-06": {
+    "poster": true,
+    "photos": 7
+  },
+  "pj-2013-03-31": {
+    "poster": true,
+    "photos": 19
+  },
+  "pj-2015-11-17": {
+    "poster": true,
+    "photos": 13
+  },
+  "pj-2015-11-14": {
+    "poster": true,
+    "photos": 15
+  },
+  "pj-2015-11-11": {
+    "poster": true,
+    "photos": 8,
+    "highlight_photos": [
+      6,
+      8
+    ]
+  },
+  "pj-2011-11-04": {
+    "poster": true,
+    "photos": 6
+  },
+  "pj-2015-11-20": {
+    "photos": 8
+  },
+  "pj-2015-11-22": {
+    "photos": 9
+  },
+  "pj-2018-03-21": {
+    "photos": 12
+  },
+  "pj-2018-03-24": {
+    "photos": 10
+  },
+  "pj-2024-08-29": {
+    "poster": true,
+    "posters": 3,
+    "photos": 13
+  },
+  "pj-2024-08-31": {
+    "poster": true,
+    "posters": 2,
+    "photos": 15
+  },
+  "ev-2014-05-06": {
+    "photos": 8
+  }
+}

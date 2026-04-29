@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setlists — meus shows de Pearl Jam + Eddie Vedder</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap');
+
+:root {
+  --bg: #0a0908;
+  --bg-card: #141210;
+  --bg-card-hover: #1b1915;
+  --ink: #f5f1e8;
+  --ink-mute: #a8a092;
+  --ink-dim: #6b6459;
+  --divider: #2a2520;
+  --divider-strong: #403930;
+  --pj: #c1272d;
+  --pj-soft: #7a1a1d;
+  --ev: #e8a13a;
+  --ev-soft: #8c5d1f;
+  --heard: #5a8a52;
+  --never: #6b6459;
+  --partial: #b8893a;
+  --skeleton-base: #1b1915;
+  --skeleton-shimmer: rgba(245,241,232,0.04);
+  --font-display: "Archivo Black", sans-serif;
+  --font-editorial: "Instrument Serif", serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html[data-theme="light"] {
+  --bg: #f3ede0;
+  --bg-card: #ebe4d3;
+  --bg-card-hover: #e0d8c3;
+  --ink: #1a1612;
+  --ink-mute: #5a5245;
+  --ink-dim: #8a7f6d;
+  --divider: #d4cbb5;
+  --divider-strong: #b3a78a;
+  --pj: #9c1f22;
+  --pj-soft: #6b1518;
+  --ev: #a0671e;
+  --ev-soft: #6e4716;
+  --heard: #4a7342;
+  --partial: #8c6420;
+  --never: #8a7f6d;
+  --skeleton-base: #e0d8c3;
+  --skeleton-shimmer: rgba(26,22,18,0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+body {
+  background-image: 
+    radial-gradient(ellipse at top, rgba(193,39,45,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(232,161,58,0.02) 0%, transparent 50%);
+  padding-bottom: 80px;
+}
+
+/* ===========================================================
+   SKELETON LOADERS (shimmer animation)
+   =========================================================== */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 0%,
+    var(--skeleton-shimmer) 50%,
+    var(--skeleton-base) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 0;
+  display: block;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+/* Loading dots ( · · · ) */
+@keyframes loading-dots {
+  0%, 20% { opacity: 0.2; }
+  50%     { opacity: 1; }
+  100%    { opacity: 0.2; }
+}
+.loading-dots span {
+  animation: loading-dots 1.2s infinite;
+  display: inline-block;
+  font-family: var(--font-mono);
+  color: var(--ink-mute);
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Spinner clássico */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--divider);
+  border-top-color: var(--pj);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* Initial overlay when app boots */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+.boot-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.boot-logo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.boot-logo .accent-pj { color: var(--pj); }
+.boot-logo .accent-ev { color: var(--ev); }
+.boot-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===========================================================
+   MASTHEAD
+   =========================================================== */
+.masthead {
+  padding: 48px 32px 24px;
+  border-bottom: 1px solid var(--divider);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.masthead-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 6vw, 64px);
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.masthead h1 .accent-pj { color: var(--pj); }
+.masthead h1 .accent-ev { color: var(--ev); }
+.masthead-sub {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--ink-mute);
+  max-width: 640px;
+  line-height: 1.4;
+}
+.masthead-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--divider-strong);
+  color: var(--ink);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.theme-toggle:hover {
+  border-color: var(--pj);
+  color: var(--pj);
+}
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0;
+  margin-top: 32px;
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
+}
+.stat {
+  padding: 20px 24px;
+  border-right: 1px solid var(--divider);
+}
+.stat:last-child { border-right: none; }
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ===========================================================
+   TABS
+   =========================================================== */
+.tabs {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--divider);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--pj);
+}
+
+/* ===========================================================
+   FILTER BAR
+   =========================================================== */
+.filter-bar {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--divider);
+}
+.filter-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-right: 4px;
+}
+.filter-chip {
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  background: transparent;
+  border: 1px solid var(--divider-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-chip:hover {
+  color: var(--ink);
+  border-color: var(--ink-dim);
+}
+.filter-chip.active {
+  color: var(--bg);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.filter-chip.active.pj {
+  background: var(--pj);
+  border-color: var(--pj);
+  color: var(--ink);
+}
+.filter-chip.active.ev {
+  background: var(--ev);
+  border-color: var(--ev);
+  color: var(--bg);
+}
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 8px 14px;
+  background: var(--bg-card);
+  color: var(--ink);
+  border: 1px solid var(--divider-strong);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.search-input:focus {
+  outline: none;
+  border-color: var(--pj);
+}
+.search-input::placeholder { color: var(--ink-dim); }
+
+/* ===========================================================
+   VIEWS
+   =========================================================== */
+.view {
+  display: none;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+.view.active { display: block; }
+.view-title {
+  font-family: var(--font-editorial);
+  font-size: 28px;
+  font-style: italic;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.view-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 28px;
+}
+
+/* ===========================================================
+   TIMELINE
+   =========================================================== */
+.timeline-year {
+  margin-bottom: 48px;
+  position: relative;
+}
+.timeline-year-label {
+  font-family: var(--font-display);
+  font-size: 88px;
+  line-height: 1;
+  color: var(--divider-strong);
+  position: absolute;
+  right: 0;
+  top: -20px;
+  pointer-events: none;
+  letter-spacing: -0.04em;
+}
+.shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+.show-card {
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  border-left: 3px solid var(--pj);
+  padding: 20px 20px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.show-card.ev { border-left-color: var(--ev); }
+
+/* Show especial — destaque dourado */
+.show-card.special {
+  border-left-width: 4px;
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(232,161,58,0.04) 100%);
+}
+.show-card.special::after {
+  content: "★";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 14px;
+  color: var(--ev);
+  line-height: 1;
+}
+.show-card-special-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--ev);
+  border-radius: 2px;
+}
+html[data-theme="light"] .show-card-special-badge {
+  color: #f5f1e8;
+}
+.show-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateX(2px);
+}
+.show-card-artist {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pj);
+  margin-bottom: 8px;
+}
+.show-card.ev .show-card-artist { color: var(--ev); }
+.show-card-date {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.show-card-venue {
+  font-family: var(--font-editorial);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+.show-card-city {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.show-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px dashed var(--divider);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+.confidence-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.confidence-badge.full { background: rgba(90,138,82,0.2); color: var(--heard); }
+.confidence-badge.partial { background: rgba(184,137,58,0.2); color: var(--partial); }
+.confidence-badge.reconstructed { background: rgba(107,100,89,0.2); color: var(--ink-mute); }
+
+/* ===========================================================
+   DRAWER
+   =========================================================== */
+.drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+.drawer-backdrop.active { display: block; }
+.drawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(520px, 100vw);
+  height: 100vh;
+  background: var(--bg);
+  border-left: 1px solid var(--divider);
+  overflow-y: auto;
+  z-index: 51;
+  padding: 32px;
+}
+.drawer.active { display: block; animation: slide-in 0.25s ease-out; }
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.drawer-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: 1px solid var(--divider-strong);
+  color: var(--ink);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+.drawer-close:hover { border-color: var(--pj); color: var(--pj); }
+.drawer-artist {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pj);
+  margin-bottom: 12px;
+}
+.drawer.ev .drawer-artist { color: var(--ev); }
+.drawer-date {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.drawer-venue {
+  font-family: var(--font-editorial);
+  font-size: 22px;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+.drawer-city-tour {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 24px;
+}
+.drawer-note {
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border-left: 2px solid var(--partial);
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-bottom: 20px;
+}
+.drawer-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 24px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--divider);
+}
+.setlist {
+  list-style: none;
+  counter-reset: song-num;
+}
+.setlist li {
+  counter-increment: song-num;
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--divider);
+  font-family: var(--font-editorial);
+  font-size: 16px;
+  font-style: italic;
+}
+.setlist li::before {
+  content: counter(song-num, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+  font-style: normal;
+  letter-spacing: 0.1em;
+}
+.setlist-song-album {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-style: normal;
+}
+
+.drawer-poster {
+  margin: 24px 0 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  padding: 8px;
+  line-height: 0;
+  position: relative;
+}
+.drawer-poster-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--skeleton-base);
+}
+.drawer-poster-inner.loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+  z-index: 1;
+}
+.drawer-poster-inner img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+.drawer-poster-inner img.loaded {
+  opacity: 1;
+}
+.drawer-photos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-top: 10px;
+}
+.photo-wrapper {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  background: var(--skeleton-base);
+}
+.photo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: block;
+  opacity: 0;
+}
+.photo-wrapper img.loaded {
+  opacity: 1;
+}
+.photo-wrapper img:hover {
+  transform: scale(1.03);
+}
+/* Fotos especiais — André aparece */
+@keyframes andre-pulse {
+  0%   { box-shadow: 0 0 0px 0px rgba(255, 200, 50, 0); }
+  50%  { box-shadow: 0 0 18px 7px rgba(255, 200, 50, 0.6); }
+  100% { box-shadow: 0 0 0px 0px rgba(255, 200, 50, 0); }
+}
+.photo-wrapper.my-moment img.loaded {
+  animation: andre-pulse 5s ease-in-out infinite;
+}
+.gallery-thumb.my-moment img.loaded {
+  animation: andre-pulse 5s ease-in-out infinite;
+}
+.photo-wrapper.loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--skeleton-base) 0%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+.drawer-meta {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--divider);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  line-height: 1.7;
+}
+.drawer-meta strong { color: var(--ink-mute); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════
+   SHOW ESPECIAL — detalhes dourados no drawer
+   ═══════════════════════════════════════════════════════ */
+.drawer.special-show .drawer-date {
+  background: linear-gradient(90deg, var(--ev) 0%, var(--pj) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.drawer.special-show .drawer-date::before {
+  content: "★ ";
+  -webkit-text-fill-color: var(--ev);
+  color: var(--ev);
+}
+
+/* Soundcheck — seção com glow âmbar */
+.soundcheck-section {
+  margin: 24px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(232,161,58,0.08) 100%);
+  border: 1px solid var(--ev-soft);
+  border-left: 3px solid var(--ev);
+  position: relative;
+}
+.soundcheck-section::before {
+  content: "★";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--ev);
+  font-size: 20px;
+  opacity: 0.5;
+}
+.soundcheck-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ev);
+  margin-bottom: 4px;
+}
+.soundcheck-title {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+.soundcheck-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: 6px 12px;
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  font-style: italic;
+}
+.soundcheck-list li {
+  display: contents;
+}
+.soundcheck-list li > .sc-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ev);
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+.soundcheck-list li > .sc-song {
+  color: var(--ink);
+  padding-bottom: 4px;
+  border-bottom: 1px dotted var(--divider);
+}
+.soundcheck-list li > .sc-album {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-style: normal;
+  padding-bottom: 4px;
+  border-bottom: 1px dotted var(--divider);
+}
+
+/* Não tocadas — visual riscado com tooltip */
+.not-played-section {
+  margin: 20px 0;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border-left: 2px dashed var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.8;
+}
+.not-played-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 8px;
+  display: block;
+}
+.not-played-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.not-played-item {
+  padding: 3px 10px;
+  background: var(--divider);
+  color: var(--ink-dim);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-dim);
+}
+
+/* Seções de mídia pessoal — visual ligeiramente diferenciado */
+.drawer-section-label.my-media {
+  color: var(--ev);
+  border-bottom-color: var(--ev-soft);
+}
+html[data-theme="light"] .drawer-section-label.my-media {
+  color: var(--ev);
+  border-bottom-color: var(--ev);
+}
+.drawer-section-label.my-media::before {
+  content: "★ ";
+  color: var(--ev);
+  font-size: 12px;
+}
+.photo-wrapper.mine {
+  border: 1px solid var(--ev-soft);
+}
+
+/* Vídeos */
+.drawer-videos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+.video-wrapper {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--ev-soft);
+  padding: 6px;
+}
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 500px;
+  background: #000;
+}
+.video-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  padding: 8px 4px 2px;
+}
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+}
+.lightbox.active { display: flex; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.lightbox img.loaded { opacity: 1; }
+.lightbox .spinner {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+/* ===========================================================
+   RANKING
+   =========================================================== */
+.ranking-list {
+  display: grid;
+  gap: 2px;
+}
+.ranking-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 100px 60px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.ranking-row:hover { background: var(--bg-card-hover); }
+.ranking-pos {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink-dim);
+  text-align: right;
+}
+.ranking-row.top-3 .ranking-pos { color: var(--pj); }
+.ranking-song-title {
+  font-family: var(--font-editorial);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--ink);
+}
+.ranking-song-album {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 2px;
+}
+.ranking-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ranking-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--divider);
+  overflow: hidden;
+  min-width: 40px;
+}
+.ranking-bar-fill {
+  height: 100%;
+  background: var(--pj);
+}
+.ranking-row.ev-only .ranking-bar-fill { background: var(--ev); }
+.ranking-count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ===========================================================
+   ALBUM COVERAGE
+   =========================================================== */
+.album-block {
+  margin-bottom: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  padding: 24px;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.album-block.complete {
+  border-color: var(--heard);
+  box-shadow: 0 0 0 1px var(--heard), 0 0 32px rgba(90,138,82,0.15);
+}
+.album-main {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 22px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+.album-cover {
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--divider);
+}
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.album-cover-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  padding: 8px;
+  text-align: center;
+  position: relative;
+}
+.album-cover-fallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 60%);
+  pointer-events: none;
+}
+.album-cover-fallback.pj {
+  background: linear-gradient(135deg, #6d1518 0%, #c1272d 100%);
+  color: #f5f1e8;
+}
+.album-cover-fallback.ev {
+  background: linear-gradient(135deg, #6e4716 0%, #e8a13a 100%);
+  color: #1a1612;
+}
+.album-cover-fallback.misc {
+  background: linear-gradient(135deg, #2a2520 0%, #6b6459 100%);
+  color: #f5f1e8;
+}
+.album-info-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 140px;
+}
+.album-block:not(.complete) .album-info-col { padding-right: 0; }
+@media (max-width: 640px) {
+  .album-info-col { padding-right: 0; }
+}
+.album-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+.album-artist-year {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.album-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+.album-coverage-stat {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.album-coverage-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--divider);
+  overflow: hidden;
+  min-width: 80px;
+}
+.album-coverage-fill {
+  height: 100%;
+  background: var(--heard);
+  transition: width 0.6s ease-out;
+}
+.album-badge-100 {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--heard);
+  color: #f5f1e8;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  z-index: 2;
+  box-shadow: 0 2px 12px rgba(90,138,82,0.3);
+}
+.album-badge-100::before {
+  content: "✓";
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+}
+.album-songs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 6px 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--divider);
+}
+.album-song {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 0;
+  font-family: var(--font-editorial);
+  font-size: 16px;
+  border-bottom: 1px dotted var(--divider);
+}
+.album-song.heard {
+  color: var(--ink);
+  font-style: italic;
+}
+.album-song.never {
+  color: var(--ink-dim);
+  text-decoration: line-through;
+  text-decoration-color: var(--divider-strong);
+}
+.album-song-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--heard);
+  font-style: normal;
+}
+.album-song.never .album-song-count {
+  color: var(--ink-dim);
+}
+@media (max-width: 640px) {
+  .album-badge-100 {
+    position: static;
+    margin-bottom: 14px;
+  }
+}
+@media (max-width: 520px) {
+  .album-main { grid-template-columns: 72px 1fr; gap: 16px; }
+  .album-cover { width: 72px; height: 72px; }
+  .album-cover-fallback { font-size: 16px; }
+  .album-title { font-size: 20px; }
+  .album-badge-100 { font-size: 9px; padding: 5px 10px; }
+}
+
+/* ===========================================================
+   SEARCH
+   =========================================================== */
+.search-hint {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  color: var(--ink-mute);
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+.search-result {
+  padding: 20px;
+  background: var(--bg-card);
+  margin-bottom: 4px;
+  border-left: 3px solid var(--heard);
+}
+.search-result.never { border-left-color: var(--ink-dim); }
+.search-result-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.search-result-album {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.search-result-count {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.search-result-shows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.search-result-show {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  background: var(--divider);
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.search-result-show:hover {
+  background: var(--pj);
+  color: var(--ink);
+}
+
+/* ===========================================================
+   HIGHLIGHTS
+   =========================================================== */
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.highlight-card {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+}
+.highlight-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 12px;
+}
+.highlight-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.highlight-sub {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 640px) {
+  .masthead { padding: 32px 20px 20px; }
+  .tabs, .filter-bar, .view { padding-left: 20px; padding-right: 20px; }
+  .drawer { padding: 24px; }
+  .stat { padding: 14px 16px; }
+  .stat-value { font-size: 30px; }
+  .timeline-year-label { font-size: 56px; top: -10px; }
+  .ranking-row { grid-template-columns: 30px 1fr 50px; gap: 10px; }
+  .ranking-bar-wrap { display: none; }
+}
+.drawer:not(.active) { display: none !important; }
+
+/* ── Rarity chips ─────────────────────────────────────────────────────────── */
+.rarity-chip {
+  display:inline-block;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:2px 5px;
+  border-radius:3px;
+  margin-left:6px;
+  vertical-align:middle;
+  cursor:default;
+  white-space:nowrap;
+}
+.chip-once    { background:#7c1d1d; color:#ffb3b3; border:1px solid #a83232; }
+.chip-ultra   { background:#6b3a00; color:#ffcc80; border:1px solid #a05a00; }
+.chip-rare    { background:#4a3900; color:#ffe082; border:1px solid #7a6000; }
+.chip-uncommon{ background:#1a3a1a; color:#a5d6a7; border:1px solid #2e7d32; }
+.chip-regular { background:transparent; color:var(--ink-mute); border:1px solid var(--rule); }
+.chip-staple  { background:transparent; color:var(--ink-dim);  border:1px solid var(--rule); opacity:0.5; }
+
+/* ── Rarity view ──────────────────────────────────────────────────────────── */
+.luck-hero {
+  background: linear-gradient(135deg, var(--card) 0%, rgba(255,160,0,0.08) 100%);
+  border:1px solid rgba(255,160,0,0.2);
+  border-radius:12px;
+  padding:28px 32px;
+  margin-bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:32px;
+}
+.luck-score-circle {
+  width:88px;height:88px;flex-shrink:0;
+  border-radius:50%;
+  background:conic-gradient(#ffa000 calc(var(--pct)*1%),var(--rule) 0);
+  display:grid;place-items:center;
+  font-family:var(--font-editorial);
+  position:relative;
+}
+.luck-score-circle::before {
+  content:'';position:absolute;inset:8px;border-radius:50%;background:var(--card);
+}
+.luck-score-num {
+  position:relative;z-index:1;font-size:26px;font-weight:900;color:#ffa000;
+}
+.luck-meta { display:flex;flex-direction:column;gap:6px; }
+.luck-meta h3 { margin:0;font-size:20px;font-family:var(--font-editorial); }
+.luck-meta p  { margin:0;color:var(--ink-mute);font-size:13px; }
+
+.rarity-table { width:100%;border-collapse:collapse;margin-bottom:32px; }
+.rarity-table th {
+  text-align:left;padding:8px 12px;font-size:11px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-mute);border-bottom:1px solid var(--rule);
+}
+.rarity-table td { padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle; }
+.rarity-table tr:hover td { background:var(--card); }
+.rarity-table .rt-song { font-weight:600;font-size:14px; }
+.rarity-table .rt-album { font-size:11px;color:var(--ink-mute);margin-top:2px; }
+.rarity-table .rt-show  { font-size:11px;color:var(--ink-dim); }
+.rarity-table .rt-plays { font-family:var(--font-editorial);font-size:18px;font-weight:700;color:var(--ink); }
+.rarity-table .rt-plays.ultra { color:#ffcc80; }
+.rarity-table .rt-plays.once  { color:#ffb3b3; }
+
+.classics-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:24px;
+}
+.classic-card {
+  background:var(--card);border:1px solid var(--rule);border-radius:8px;
+  padding:14px 16px;cursor:default;
+}
+.classic-card .cc-plays { font-size:22px;font-family:var(--font-editorial);font-weight:700;color:var(--pj);margin-bottom:4px; }
+.classic-card .cc-song  { font-size:13px;font-weight:600; }
+.classic-card .cc-album { font-size:11px;color:var(--ink-mute); }
+
+.rarity-section-title {
+  font-family:var(--font-editorial);font-size:18px;font-weight:700;margin:32px 0 6px;
+}
+.rarity-section-sub { font-size:12px;color:var(--ink-mute);margin-bottom:16px; }
+
+.data-source-badge {
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--ink-mute);
+  background:var(--card);border:1px solid var(--rule);
+  border-radius:20px;padding:4px 12px;margin-bottom:24px;
+}
+.data-source-badge::before { content:'🔄'; }
+
+
+/* ── Real album covers ────────────────────────────────────────────────────── */
+.album-cover-img {
+  width:100%;height:100%;object-fit:cover;border-radius:6px;display:block;
+  transition:opacity 0.3s;
+}
+.album-cover-img.loading { opacity:0; }
+.album-cover-img.loaded  { opacity:1; }
+
+
+/* ── Gallery view ─────────────────────────────────────────────────────────── */
+.gallery-show-block { margin-bottom: 40px; }
+.gallery-show-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+}
+.gallery-show-header:hover .gallery-show-name { color: var(--pj); }
+.gallery-show-name {
+  font-family: var(--font-editorial); font-size: 16px; font-weight: 700;
+  transition: color 0.2s;
+}
+.gallery-show-meta { font-size: 12px; color: var(--ink-mute); }
+.gallery-show-count {
+  margin-left: auto; font-size: 11px; color: var(--ink-dim);
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 10px; padding: 2px 8px;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+}
+.gallery-thumb {
+  aspect-ratio: 4/3; overflow: hidden; border-radius: 4px;
+  cursor: pointer; background: var(--card);
+  position: relative;
+}
+.gallery-thumb img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.25s, opacity 0.3s;
+  opacity: 0;
+}
+.gallery-thumb img.loaded { opacity: 1; }
+.gallery-thumb:hover img { transform: scale(1.05); }
+.gallery-empty {
+  color: var(--ink-mute); font-size: 13px; font-style: italic;
+  padding: 12px 0;
+}
+.gallery-filter-chip {
+  font-size: 11px; padding: 4px 12px; border-radius: 20px; cursor: pointer;
+  border: 1px solid var(--rule); background: transparent; color: var(--ink-mute);
+  transition: all 0.15s;
+}
+.gallery-filter-chip.active,
+.gallery-filter-chip:hover {
+  background: var(--pj); color: #fff; border-color: var(--pj);
+}
+
+</style>
+</head>
+<body>
+
+<!-- BOOT OVERLAY -->
+<div class="boot-overlay" id="boot-overlay">
+  <div class="boot-logo">
+    <span class="accent-pj">Pearl Jam</span>
+    <span style="color:var(--ink-mute)">+</span>
+    <span class="accent-ev">Eddie Vedder</span>
+  </div>
+  <div class="boot-status" id="boot-status">
+    <span class="spinner"></span>
+    <span id="boot-text">Carregando arquivo</span>
+    <span class="loading-dots"><span>·</span><span>·</span><span>·</span></span>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">Personal archive · Brazil + Chicago 2005—2024</div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">☀</button>
+  </div>
+  <h1>
+    <span class="accent-pj">Pearl Jam</span>
+    <span style="color:var(--ink-mute)">+</span>
+    <span class="accent-ev">Eddie Vedder</span>
+    <br>o que ouvi ao vivo
+  </h1>
+  <p class="masthead-sub">
+    Todos os shows que assisti, cruzados com as músicas tocadas em cada noite.
+    Ranking, gaps e trilha histórica — o que já pintou no palco e o que ainda falta.
+  </p>
+  <div class="stats-strip" id="stats-strip"></div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs">
+  <button class="tab active" data-view="timeline">Timeline</button>
+  <button class="tab" data-view="ranking">Ranking</button>
+  <button class="tab" data-view="gaps">Cobertura por álbum</button>
+  <button class="tab" data-view="highlights">Destaques</button>
+  <button class="tab" data-view="search">Buscar música</button>
+  <button class="tab" data-view="rarity">🎲 Raridades</button>
+  <button class="tab" data-view="gallery">📷 Galeria</button>
+</nav>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Artista</span>
+  <button class="filter-chip active" data-filter="artist" data-value="all">Todos</button>
+  <button class="filter-chip" data-filter="artist" data-value="Pearl Jam">Pearl Jam</button>
+  <button class="filter-chip" data-filter="artist" data-value="Eddie Vedder">Eddie Vedder</button>
+  <span class="filter-label" style="margin-left:20px">Ano</span>
+  <div id="year-filters" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+</div>
+
+<!-- VIEWS -->
+<section class="view active" id="view-timeline">
+  <h2 class="view-title">Linha do tempo</h2>
+  <div class="view-desc">25 shows · clique pra ver o setlist</div>
+  <div id="timeline-content"></div>
+</section>
+<section class="view" id="view-ranking">
+  <h2 class="view-title">Músicas mais ouvidas ao vivo</h2>
+  <div class="view-desc">ordenado por frequência entre seus shows</div>
+  <div class="ranking-list" id="ranking-content"></div>
+</section>
+<section class="view" id="view-gaps">
+  <h2 class="view-title">Cobertura por álbum</h2>
+  <div class="view-desc">o que já ouviu, o que ainda falta — riscado = nunca ouvi ao vivo</div>
+  <div id="gaps-content"></div>
+</section>
+<section class="view" id="view-highlights">
+  <h2 class="view-title">Destaques</h2>
+  <div class="view-desc">números e curiosidades do seu arquivo pessoal</div>
+  <div class="highlight-grid" id="highlights-content"></div>
+</section>
+<section class="view" id="view-search">
+  <h2 class="view-title">Buscar música</h2>
+  <div class="view-desc">veja se você já ouviu, quantas vezes e em quais shows</div>
+  <input type="text" class="search-input" id="search-song" placeholder='digite: "Black", "Porch", "Given to Fly"...' style="max-width:500px;width:100%;margin-bottom:24px;">
+  <div id="search-results"></div>
+</section>
+
+<section class="view" id="view-rarity">
+  <h2 class="view-title">Raridades & Luck Score</h2>
+  <div class="view-desc">quão sortudo você foi — calculado por frequência histórica na carreira do PJ</div>
+  <div id="rarity-content"></div>
+</section>
+
+<section class="view" id="view-gallery">
+  <h2 class="view-title">Galeria</h2>
+  <div class="view-desc">todas as fotos oficiais — clique para ampliar</div>
+  <div id="gallery-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;"></div>
+  <div id="gallery-content"></div>
+</section>
+
+<!-- DRAWER -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawer-close" id="drawer-close">×</button>
+  <div id="drawer-content"></div>
+</aside>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="spinner" id="lightbox-spinner"></div>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+// ========================================================================
+// DATA (injected at build-time)
+// ========================================================================
+const SHOWS = [{"id": "pj-2005-12-02", "artist": "Pearl Jam", "date": "2005-12-02", "venue": "Estádio do Pacaembu", "city": "São Paulo, BR", "tour": "South American Tour 2005", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Go", "Hail, Hail", "Animal", "Green Disease", "Corduroy", "Given to Fly", "Even Flow", "Faithfull", "Untitled", "MFC", "Porch", "I Got Id", "Once", "Glorified G", "Do the Evolution", "Modern Girl", "Better Man", "Alive", "Man of the Hour", "I Believe in Miracles", "Last Kiss", "Don't Gimme No Lip", "Rearviewmirror", "Save You", "Black", "Jeremy", "Yellow Ledbetter"]}, {"id": "pj-2011-11-03", "artist": "Pearl Jam", "date": "2011-11-03", "venue": "Estádio do Morumbi", "city": "São Paulo, BR", "tour": "Pearl Jam Twenty Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Corduroy", "Why Go", "Animal", "World Wide Suicide", "Got Some", "Even Flow", "Unthought Known", "Whipping", "Daughter", "W.M.A.", "Olé", "Down", "Save You", "The Fixer", "Do the Evolution", "Porch", "Elderly Woman Behind the Counter in a Small Town", "Just Breathe", "Come Back", "I Believe in Miracles", "Alive", "Comatose", "Black", "Better Man", "Rearviewmirror", "Rockin' in the Free World"]}, {"id": "pj-2011-11-04", "artist": "Pearl Jam", "date": "2011-11-04", "venue": "Estádio do Morumbi", "city": "São Paulo, BR", "tour": "Pearl Jam Twenty Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Go", "Do the Evolution", "Severed Hand", "Hail, Hail", "Got Some", "Elderly Woman Behind the Counter in a Small Town", "Given to Fly", "Gonna See My Friend", "Wishlist", "Amongst the Waves", "Setting Forth", "Not for You", "Modern Girl", "Even Flow", "Unthought Known", "The Fixer", "Once", "Black", "Just Breathe", "Inside Job", "State of Love and Trust", "Olé", "Why Go", "Jeremy", "Last Kiss", "Better Man", "Save It for Later", "I Wanna Be Your Boyfriend", "Spin the Black Circle", "Alive", "Baba O'Riley", "Yellow Ledbetter"]}, {"id": "pj-2011-11-06", "artist": "Pearl Jam", "date": "2011-11-06", "venue": "Praça da Apoteose", "city": "Rio de Janeiro, BR", "tour": "Pearl Jam Twenty Tour", "confidence": "full", "source": "pearljam.com (oficial)", "note": "Caravana de fãs no Cristo Redentor com faixa PJ20 Brasil antes do show.", "songs": ["Unthought Known", "Last Exit", "Blood", "Corduroy", "Given to Fly", "Nothingman", "Faithfull", "Even Flow", "Daughter", "Blitzkrieg Bop", "Habit", "Immortality", "The Fixer", "Got Some", "Elderly Woman Behind the Counter in a Small Town", "Why Go", "Rearviewmirror", "Just Breathe", "Come Back", "I Believe in Miracles", "State of Love and Trust", "Of the Earth", "Do the Evolution", "Jeremy", "Mother", "Better Man", "Black", "Alive", "Rockin' in the Free World", "Indifference", "Yellow Ledbetter"]}, {"id": "pj-2011-11-09", "artist": "Pearl Jam", "date": "2011-11-09", "venue": "Estádio Durival Britto e Silva (Vila Capanema)", "city": "Curitiba, BR", "tour": "Pearl Jam Twenty Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Go", "Arms Aloft", "Animal", "Olé", "Why Go", "Elderly Woman Behind the Counter in a Small Town", "Corduroy", "Given to Fly", "Dissident", "The Fixer", "Even Flow", "In Hiding", "Setting Forth", "Not for You", "Modern Girl", "Red Mosquito", "Got Some", "World Wide Suicide", "Porch", "Just Breathe", "Off He Goes", "Unthought Known", "Breath", "Supersonic", "Black", "Jeremy", "Better Man", "Save It for Later", "Leaving Here", "Footsteps", "Once", "Alive", "Baba O'Riley", "Yellow Ledbetter"]}, {"id": "pj-2013-03-31", "artist": "Pearl Jam", "date": "2013-03-31", "venue": "Jockey Club (Lollapalooza)", "city": "São Paulo, BR", "tour": "Lightning Bolt Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Elderly Woman Behind the Counter in a Small Town", "Why Go", "Interstellar Overdrive", "Corduroy", "Comatose", "Olé", "Do the Evolution", "Wishlist", "Got Some", "Even Flow", "Nothingman", "Insignificance", "Daughter", "World Wide Suicide", "Jeremy", "Unthought Known", "State of Love and Trust", "Rearviewmirror", "Given to Fly", "Not for You", "Better Man", "Black", "I Believe in Miracles", "Go", "Alive", "Baba O'Riley", "Yellow Ledbetter"]}, {"id": "pj-2013-04-03", "artist": "Pearl Jam", "date": "2013-04-03", "venue": "Costanera Sur (Lollapalooza Argentina)", "city": "Buenos Aires, AR", "tour": "Lightning Bolt Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Even Flow", "Lukin", "Corduroy", "In Hiding", "Save You", "Deep", "Jeremy", "Wishlist", "Hail, Hail", "Given to Fly", "I Got Id", "Daughter", "Got Some", "Better Man", "Elderly Woman Behind the Counter in a Small Town", "Rearviewmirror", "Do the Evolution", "Animal", "Just Breathe", "Black", "I Believe in Miracles", "Alive", "Rockin' in the Free World", "Yellow Ledbetter"]}, {"id": "pj-2013-04-06", "artist": "Pearl Jam", "date": "2013-04-06", "venue": "Parque O'Higgins (Lollapalooza Chile)", "city": "Santiago, CL", "tour": "Lightning Bolt Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Go", "Even Flow", "Do the Evolution", "Corduroy", "Amongst the Waves", "Why Go", "Severed Hand", "Not for You", "Got Some", "Just Breathe", "Once", "Unthought Known", "Daughter", "Elderly Woman Behind the Counter in a Small Town", "Porch", "Present Tense", "Animal", "Given to Fly", "Jeremy", "Black", "Sonic Reducer", "Alive", "Rockin' in the Free World", "Yellow Ledbetter"]}, {"id": "pj-2015-11-11", "artist": "Pearl Jam", "date": "2015-11-11", "venue": "Arena do Grêmio", "city": "Porto Alegre, BR", "tour": "Latin American Tour 2015", "confidence": "full", "source": "pearljam.com (oficial)", "note": "Show de abertura da turnê brasileira 2015 — você presenciou 11 músicas inéditas no soundcheck antes do show abrir pro público, incluindo raridades como 'Ghost', 'Let the Records Play', 'U' e 'Love Reign O'er Me'.", "special": true, "soundcheck": ["Inside Job", "Getaway", "Comfortably Numb", "Ghost", "Let the Records Play", "U", "Love Reign O'er Me", "Redemption Song", "Rats", "Blood", "Big Wave"], "not_played": ["Infallible", "Sleeping by Myself", "Thin Air", "Unthought Known", "Leash", "Baba O'Riley"], "songs": ["Pendulum", "Release", "Elderly Woman Behind the Counter in a Small Town", "Mind Your Manners", "Animal", "Do the Evolution", "Interstellar Overdrive", "Corduroy", "Lightning Bolt", "Faithfull", "Even Flow", "I Got Id", "Lukin", "Not for You", "Sirens", "Let the Records Play", "Spin the Black Circle", "Rearviewmirror", "Last Kiss", "Hard to Imagine", "Wishlist", "Jeremy", "Glorified G", "Better Man", "Save It for Later", "Go", "Porch", "Comfortably Numb", "Why Go", "Given to Fly", "Black", "Alive", "Fuckin' Up", "Yellow Ledbetter"]}, {"id": "pj-2015-11-17", "artist": "Pearl Jam", "date": "2015-11-17", "venue": "Estádio Mané Garrincha", "city": "Brasília, BR", "tour": "Latin American Tour 2015", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Wash", "Nothingman", "Corduroy", "Lightning Bolt", "Mind Your Manners", "Brain of J.", "Tremor Christ", "In My Tree", "Even Flow", "Rain", "Unthought Known", "My Father's Son", "Animal", "Daughter → Another Brick in the Wall, Part 2", "Habit", "Given to Fly", "Lukin", "Rearviewmirror", "Redemption Song", "Mother", "Sirens", "Jeremy", "Supersonic", "Why Go", "Leash", "Porch", "Last Exit", "Elderly Woman Behind the Counter in a Small Town", "Better Man", "Do the Evolution", "Crazy Mary", "Alive", "Baba O'Riley", "Indifference"]}, {"id": "pj-2015-11-14", "artist": "Pearl Jam", "date": "2015-11-14", "venue": "Estádio do Morumbi", "city": "São Paulo, BR", "tour": "Latin American Tour 2015", "confidence": "full", "source": "pearljam.com (oficial)", "note": "Menos de 24h após os atentados em Paris. Eddie usa camisa de peace sign, Jeff com 'Unfuck the World', Matt desenhou a Torre Eiffel no bumbo. Abriu com Long Road emocional. Durante Imagine, torcida mostrou bandeira francesa nos telões.", "songs": ["Long Road", "Of the Girl", "Love Boat Captain", "Do the Evolution", "Hail, Hail", "Why Go", "Getaway", "Mind Your Manners", "Deep", "Corduroy", "Lightning Bolt", "Elderly Woman Behind the Counter in a Small Town", "Even Flow", "Come Back", "Swallowed Whole", "Given to Fly", "Jeremy", "Better Man → Save It for Later", "Rearviewmirror", "Footsteps", "Imagine", "Sirens", "Whipping", "I Am Mine", "Blood", "Porch", "Comatose", "State of Love and Trust", "Black → It's OK", "Alive", "Rockin' in the Free World", "Yellow Ledbetter", "All Along the Watchtower"]}, {"id": "pj-2015-11-20", "artist": "Pearl Jam", "date": "2015-11-20", "venue": "Mineirão", "city": "Belo Horizonte, BR", "tour": "Latin American Tour 2015", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Rain", "Sometimes", "Elderly Woman Behind the Counter in a Small Town", "Go", "Mind Your Manners", "Once", "Got Some", "Rearviewmirror", "Pilate", "Even Flow", "Infallible", "Given to Fly", "I'm Open", "I Am Mine", "Satan's Bed", "Deep", "Jeremy", "Why Go", "Bee Girl", "Sleeping by Myself", "Imagine", "Sirens", "Do the Evolution", "I Want You So Hard", "Corduroy", "Mankind", "Porch", "Eruption", "Garden", "Comfortably Numb", "Lightning Bolt", "Black", "Sonic Reducer", "Alive", "Rockin' in the Free World", "Yellow Ledbetter → Little Wing"]}, {"id": "pj-2015-11-22", "artist": "Pearl Jam", "date": "2015-11-22", "venue": "Estádio do Maracanã", "city": "Rio de Janeiro, BR", "tour": "Latin American Tour 2015", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Oceans", "Present Tense", "Corduroy", "Hail, Hail", "Mind Your Manners", "Do the Evolution", "Amongst the Waves", "Save You", "Even Flow", "Who You Are", "Setting Forth", "Not for You", "Sirens", "Given to Fly", "I Want You So Hard", "Comatose", "Lukin", "Rearviewmirror", "Yellow Moon", "Elderly Woman Behind the Counter in a Small Town", "Just Breathe", "Imagine", "Jeremy", "Why Go", "The Fixer", "Porch", "Last Kiss", "Comfortably Numb", "Spin the Black Circle", "Black", "Better Man", "Alive", "Rockin' in the Free World", "Yellow Ledbetter"]}, {"id": "pj-2018-03-21", "artist": "Pearl Jam", "date": "2018-03-21", "venue": "Estádio do Maracanã", "city": "Rio de Janeiro, BR", "tour": "South American Tour 2018", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Low Light", "Elderly Woman Behind the Counter in a Small Town", "Go", "All Night", "Animal", "Given to Fly", "In Hiding", "Jeremy", "Corduroy", "Even Flow", "Immortality", "Wishlist", "Mind Your Manners", "Lightning Bolt", "Garden", "Can't Deny Me", "Porch", "Sleeping by Myself", "Inside Job", "Daughter → W.M.A.", "Blitzkrieg Bop", "Do the Evolution", "Black", "Leaving Here", "Blood", "Save It for Later", "Better Man → I Wanna Be Your Boyfriend → Save It for Later", "Alive", "Rockin' in the Free World", "Yellow Ledbetter"]}, {"id": "pj-2018-03-24", "artist": "Pearl Jam", "date": "2018-03-24", "venue": "Autódromo de Interlagos (Lollapalooza)", "city": "São Paulo, BR", "tour": "South American Tour 2018", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Wash", "Corduroy", "Do the Evolution", "Why Go", "Mind Your Manners", "Elderly Woman Behind the Counter in a Small Town", "Can't Deny Me", "Even Flow", "Mountain Song", "Breath", "Pulled Up", "Unthought Known", "Jeremy", "Sirens", "Down", "Better Man → Save It for Later", "Hold On", "Black", "Once", "Lukin", "Porch", "Smile", "Comfortably Numb", "Alive", "Baba O'Riley", "Yellow Ledbetter"]}, {"id": "pj-2024-08-29", "artist": "Pearl Jam", "date": "2024-08-29", "venue": "Wrigley Field", "city": "Chicago, US", "tour": "Dark Matter World Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Release", "Of the Girl", "Elderly Woman Behind the Counter in a Small Town", "Off He Goes", "Immortality", "Given to Fly", "Why Go", "Scared of Fear", "Waiting for Stevie", "Wreckage", "Daughter → Another Brick in the Wall, Part 2", "Down", "Even Flow", "U", "Dark Matter", "Black", "Do the Evolution", "Porch", "Just Breathe", "I Won't Back Down", "State of Love and Trust", "Won't Tell", "Corduroy", "Setting Sun", "Alive", "Rockin' in the Free World"]}, {"id": "pj-2024-08-31", "artist": "Pearl Jam", "date": "2024-08-31", "venue": "Wrigley Field", "city": "Chicago, US", "tour": "Dark Matter World Tour", "confidence": "full", "source": "pearljam.com (oficial)", "songs": ["Garden", "Porch", "Wishlist", "Come Back", "All Night", "Not for You → Modern Girl", "React, Respond", "Running", "Wreckage", "Even Flow", "Given to Fly", "Dark Matter", "In Hiding", "Upper Hand", "Better Man → Save It for Later", "Rearviewmirror", "Throw Your Arms Around Me", "Falling Slowly", "Smile", "Setting Sun", "Jeremy", "Alive", "Baba O'Riley", "Yellow Ledbetter → Little Wing"]}, {"id": "ev-2014-05-06", "artist": "Eddie Vedder", "date": "2014-05-06", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2014", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Show extra adicionado pela T4F após anúncio original (datas originais eram 7/8/9). Primeira apresentação da turnê brasileira, com Glen Hansard abrindo.", "songs": ["Tuolumne", "The Moon Song", "Can't Keep", "Without You", "Sleeping by Myself", "More Than You Know", "Sometimes", "Immortality", "The Needle and the Damage Done", "Driftin'", "Good Woman", "Thumbing My Way", "Far Behind", "Guaranteed", "No Ceiling", "Rise", "Better Man", "Lukin", "I Won't Hold On", "Porch", "Just Breathe", "Unthought Known", "Crazy Mary", "Sleepless Nights", "Society", "Falling Slowly", "Elderly Woman Behind the Counter in a Small Town", "Parting Ways", "I Believe in Miracles", "The End", "Arc", "Bugs", "Hard Sun"]}, {"id": "ev-2014-05-07", "artist": "Eddie Vedder", "date": "2014-05-07", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2014", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Eddie teve dificuldade de tocar 'Long Nights' com Glen Hansard e desistiu no meio após duas tentativas. Should I Stay or Should I Go com Marcelo, fã da plateia. Noite das raridades: Dead Man, Speed of Sound, Future Days debutando na turnê.", "songs": ["Tuolumne", "Walking the Cow", "Trouble", "Dead Man", "Can't Keep", "Sleeping by Myself", "Without You", "Soon Forget", "Light Today", "Throw Your Arms Around Me", "I'm One", "Speed of Sound", "I Am Mine", "Man of the Hour", "Wishlist", "Far Behind", "Setting Forth", "Guaranteed", "Long Nights", "You've Got to Hide Your Love Away", "Unthought Known", "Picture in a Frame", "Future Days", "Masters of War", "Porch", "Sleepless Nights", "I Won't Hold On", "Society", "Falling Slowly", "Last Kiss", "Should I Stay or Should I Go", "Off He Goes", "Open All Night", "Better Days", "Hard Sun"]}, {"id": "ev-2014-05-08", "artist": "Eddie Vedder", "date": "2014-05-08", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2014", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Último show em SP da turnê 2014. Glen Hansard em várias faixas. Should I Stay or Should I Go com Sergio Vedder (cover band Blaymorphed). Nota: 'No More' estava no setlist mas não foi tocada.", "not_played": ["No More"], "songs": ["Tuolumne", "Long Road", "Brain Damage", "Sometimes", "Can't Keep", "Sleeping by Myself", "Without You", "You're True", "Broken Heart", "Elderly Woman Behind the Counter in a Small Town", "Love Boat Captain", "Far Behind", "Setting Forth", "Guaranteed", "Rise", "Long Nights", "Immortality", "You've Got to Hide Your Love Away", "Better Man → Save It for Later", "Just Breathe", "Lukin", "Porch", "Sleepless Nights", "Society", "Falling Slowly", "Should I Stay or Should I Go", "Better Days", "Rockin' in the Free World", "Hard Sun", "Dream a Little Dream of Me"]}, {"id": "ev-2014-05-11", "artist": "Eddie Vedder", "date": "2014-05-11", "venue": "Citibank Hall", "city": "Rio de Janeiro, BR", "tour": "South American Tour 2014", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Primeiro dos 2 shows no Rio. Glen Hansard apareceu pra 4 músicas. Should I Stay or Should I Go com Victor, fã da plateia. 'Open All Night' e 'Arc' estavam no setlist mas não tocaram.", "not_played": ["Open All Night", "Arc"], "songs": ["Tuolumne", "Brain Damage", "Sometimes", "Trouble", "Good Woman", "Thumbing My Way", "Can't Keep", "Sleeping by Myself", "Goodbye", "Light Today", "I Am Mine", "Better Man", "Far Behind", "Setting Forth", "Guaranteed", "Long Nights", "You've Got to Hide Your Love Away", "I Believe in Miracles", "Immortality", "The Needle and the Damage Done", "4th of July", "Just Breathe", "Elderly Woman Behind the Counter in a Small Town", "Sleepless Nights", "Society", "Present Tense", "Falling Slowly", "Should I Stay or Should I Go", "Porch", "Hard Sun", "Dream a Little Dream of Me"]}, {"id": "ev-2014-05-12", "artist": "Eddie Vedder", "date": "2014-05-12", "venue": "Citibank Hall", "city": "Rio de Janeiro, BR", "tour": "South American Tour 2014", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Último show da turnê 2014. Aparição especial de Kelly Slater (11x campeão mundial de surfe) em 'Indifference' e 'Hard Sun'. Glen Hansard em várias. 'I'm So Tired' e 'Should I Stay or Should I Go' estavam no setlist mas não foram tocadas. 'I Am a Patriot' e 'Forever Young' eram alternativas.", "not_played": ["I'm So Tired", "Should I Stay or Should I Go", "I Am a Patriot (alternativa)", "Forever Young (alternativa)"], "songs": ["Tuolumne", "Better Man", "Girl From the North Country", "Speed of Sound", "Can't Keep", "Soon Forget", "Sleeping by Myself", "Without You", "Driftin'", "You've Got to Hide Your Love Away", "Gone", "Wishlist", "Parting Ways", "Far Behind", "No Ceiling", "Setting Forth", "Rise", "Long Nights", "Unthought Known", "Elderly Woman Behind the Counter in a Small Town", "Sleepless Nights", "Falling Slowly", "Drive All Night", "I Got Id", "Porch", "Better Days", "Crazy Mary", "Rockin' in the Free World", "Indifference", "Hard Sun", "Smile", "Dream a Little Dream of Me"]}, {"id": "ev-2018-03-28", "artist": "Eddie Vedder", "date": "2018-03-28", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2018", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Primeiro dos 3 shows solo em SP, logo após o Lollapalooza (24/3). Live debut mundial de 'Wildflowers' (Tom Petty). Glen Hansard abriu e tocou no encore. Notas: 'Man of the Hour', 'Tomorrow Night' e 'After Hours' estavam no setlist escrito mas não foram tocadas.", "not_played": ["Man of the Hour", "Tomorrow Night", "After Hours"], "songs": ["Waving Palms", "River Cross", "Walking the Cow", "Long Road", "Brain Damage", "Sometimes", "Keep Me in Your Heart", "I Am Mine", "Wildflowers", "Just Breathe", "Without You", "Far Behind", "Guaranteed", "Millworker", "Rise", "Hurt", "Wishlist", "Light Years", "Crazy Mary", "Bad", "Immortality", "Masters of War", "Imagine", "Porch", "Sleepless Nights", "Society", "Should I Stay or Should I Go", "Hard Sun"]}, {"id": "ev-2018-03-29", "artist": "Eddie Vedder", "date": "2018-03-29", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2018", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Segundo show SP. 'No Ceiling' com dois fãs convidados ao palco. 'Better Days' — Eddie desceu do palco e andou na plateia. 'Around the Bend' (No Code) raridade absoluta. Notas: 'The Ship Song' foi substituída por 'Throw Your Arms Around Me', 'Last Kiss' estava no setlist mas não tocou.", "not_played": ["The Ship Song (substituída por Throw Your Arms Around Me)", "Last Kiss"], "songs": ["Tuolumne", "I'm So Tired", "Trouble", "Dead Man", "Good Woman", "Wishlist", "You've Got to Hide Your Love Away", "Picture in a Frame", "Elderly Woman Behind the Counter in a Small Town", "Around the Bend", "Can't Keep", "Sleeping by Myself", "Soon Forget", "No Ceiling", "Far Behind", "Guaranteed", "Long Nights", "Present Tense", "I Am a Patriot", "Throw Your Arms Around Me", "Speed of Sound", "I Won't Back Down", "Porch", "Unthought Known", "Better Days", "Falling Slowly", "Society", "Rockin' in the Free World", "After Hours", "Hard Sun"]}, {"id": "ev-2018-03-30", "artist": "Eddie Vedder", "date": "2018-03-30", "venue": "Citibank Hall", "city": "São Paulo, BR", "tour": "South American Tour 2018", "confidence": "full", "source": "setlist.fm (oficial)", "note": "Último show da 'residência' de SP. Show dos mais emocionantes — Eddie desceu ao meio do público várias vezes. Discurso anti-Trump. Bis duplo incluiu 'Black' com Sergio Vedder (cover band brasileira Blaymorphed). Nota: 'Thumbing My Way' foi substituída por 'Man of the Hour'.", "not_played": ["Thumbing My Way (substituída por Man of the Hour)"], "songs": ["Waving Palms", "Isn't It a Pity", "The Ship Song", "Don't Be Shy", "Just Breathe", "Elderly Woman Behind the Counter in a Small Town", "Wishlist", "Driftin'", "Sleeping by Myself", "Here Comes the Sun", "Song of Good Hope", "Drive All Night", "Far Behind", "Guaranteed", "The Needle and the Damage Done", "Rise", "Better Man", "Forever Young", "Man of the Hour", "The End", "Parting Ways", "Last Kiss", "Porch", "Better Days", "Sleepless Nights", "Falling Slowly", "Society", "Smile", "Rockin' in the Free World", "Black", "Hard Sun"]}];
+const ALBUMS = [{"id": "ten", "title": "Ten", "abbrev": "TEN", "artist": "Pearl Jam", "year": 1991, "color": "var(--pj)", "songs": ["Once", "Even Flow", "Alive", "Why Go", "Black", "Jeremy", "Oceans", "Porch", "Garden", "Deep", "Release"]}, {"id": "vs", "title": "Vs.", "abbrev": "VS.", "artist": "Pearl Jam", "year": 1993, "color": "var(--pj)", "songs": ["Go", "Animal", "Daughter", "Glorified G", "Dissident", "W.M.A.", "Blood", "Rearviewmirror", "Rats", "Elderly Woman Behind the Counter in a Small Town", "Leash", "Indifference"]}, {"id": "vitalogy", "title": "Vitalogy", "abbrev": "VITAL.", "artist": "Pearl Jam", "year": 1994, "color": "var(--pj)", "songs": ["Last Exit", "Spin the Black Circle", "Not for You", "Tremor Christ", "Nothingman", "Whipping", "Pry, To", "Corduroy", "Bugs", "Satan's Bed", "Better Man", "Aye Davanita", "Immortality", "Hey Foxymophandlemama, That's Me"]}, {"id": "nocode", "title": "No Code", "abbrev": "NO\nCODE", "artist": "Pearl Jam", "year": 1996, "color": "var(--pj)", "songs": ["Sometimes", "Hail, Hail", "Who You Are", "In My Tree", "Smile", "Off He Goes", "Habit", "Red Mosquito", "Lukin", "Present Tense", "Mankind", "I'm Open", "Around the Bend"]}, {"id": "yield", "title": "Yield", "abbrev": "YIELD", "artist": "Pearl Jam", "year": 1998, "color": "var(--pj)", "songs": ["Brain of J.", "Faithfull", "No Way", "Given to Fly", "Wishlist", "Pilate", "Do the Evolution", "MFC", "Low Light", "In Hiding", "Push Me, Pull Me", "All Those Yesterdays", "Untitled"]}, {"id": "binaural", "title": "Binaural", "abbrev": "BIN.", "artist": "Pearl Jam", "year": 2000, "color": "var(--pj)", "songs": ["Breakerfall", "Gods' Dice", "Evacuation", "Light Years", "Nothing as It Seems", "Thin Air", "Insignificance", "Of the Girl", "Grievance", "Rival", "Sleight of Hand", "Soon Forget", "Parting Ways"]}, {"id": "riotact", "title": "Riot Act", "abbrev": "RIOT\nACT", "artist": "Pearl Jam", "year": 2002, "color": "var(--pj)", "songs": ["Can't Keep", "Save You", "Love Boat Captain", "Cropduster", "Ghost", "I Am Mine", "Thumbing My Way", "You Are", "Get Right", "Green Disease", "Help Help", "Bu$hleaguer", "1/2 Full", "Arc", "All or None"]}, {"id": "pj2006", "title": "Pearl Jam (2006)", "abbrev": "PJ'06", "artist": "Pearl Jam", "year": 2006, "color": "var(--pj)", "songs": ["Life Wasted", "World Wide Suicide", "Comatose", "Severed Hand", "Marker in the Sand", "Parachutes", "Unemployable", "Big Wave", "Gone", "Wasted Reprise", "Army Reserve", "Come Back", "Inside Job"]}, {"id": "backspacer", "title": "Backspacer", "abbrev": "BACK.", "artist": "Pearl Jam", "year": 2009, "color": "var(--pj)", "songs": ["Gonna See My Friend", "Got Some", "The Fixer", "Johnny Guitar", "Just Breathe", "Amongst the Waves", "Unthought Known", "Supersonic", "Speed of Sound", "Force of Nature", "The End"]}, {"id": "lightningbolt", "title": "Lightning Bolt", "abbrev": "L.BOLT", "artist": "Pearl Jam", "year": 2013, "color": "var(--pj)", "songs": ["Getaway", "Mind Your Manners", "My Father's Son", "Sirens", "Lightning Bolt", "Infallible", "Pendulum", "Swallowed Whole", "Let the Records Play", "Sleeping by Myself", "Yellow Moon", "Future Days"]}, {"id": "gigaton", "title": "Gigaton", "abbrev": "GIGA.", "artist": "Pearl Jam", "year": 2020, "color": "var(--pj)", "songs": ["Who Ever Said", "Superblood Wolfmoon", "Dance of the Clairvoyants", "Quick Escape", "Alright", "Seven O'Clock", "Never Destination", "Take the Long Way", "Buckle Up", "Come Then Goes", "Retrograde", "River Cross"]}, {"id": "darkmatter", "title": "Dark Matter", "abbrev": "DARK\nMATTER", "artist": "Pearl Jam", "year": 2024, "color": "var(--pj)", "songs": ["Scared of Fear", "React, Respond", "Wreckage", "Dark Matter", "Won't Tell", "Upper Hand", "Waiting for Stevie", "Running", "Something Special", "Got to Give", "Setting Sun"]}, {"id": "lostdogs", "title": "Lost Dogs · B-sides · Raridades", "abbrev": "LOST\nDOGS", "artist": "Pearl Jam", "year": 0, "color": "var(--pj-soft)", "songs": ["Hard to Imagine", "Yellow Ledbetter", "Down", "Footsteps", "State of Love and Trust", "Crazy Mary", "All Night", "Out of My Mind", "Leaving Here", "Olé", "Sad", "I Got Id", "Long Road", "Chloe Dancer / Crown of Thorns", "Dirty Frank", "Hold On", "Alone", "Strangest Tribe", "Fatal", "Can't Deny Me", "Arms Aloft", "Wash", "Breath", "Of the Earth", "Man of the Hour", "Bee Girl", "U", "Dead Man", "Parting Ways"]}, {"id": "intowild", "title": "Into the Wild (EV, 2007)", "abbrev": "INTO\nTHE\nWILD", "artist": "Eddie Vedder", "year": 2007, "color": "var(--ev)", "songs": ["Setting Forth", "Society", "Rise", "Far Behind", "Guaranteed", "No Ceiling", "Long Nights", "Hard Sun"]}, {"id": "ukulele", "title": "Ukulele Songs (EV, 2011)", "abbrev": "UKE\nSONGS", "artist": "Eddie Vedder", "year": 2011, "color": "var(--ev)", "songs": ["Without You", "Sleepless Nights", "Broken Heart", "Satellite", "Longing to Belong", "Goodbye", "Tonight You Belong to Me", "Dream a Little Dream of Me", "More Than You Know", "I'm Open", "You're True", "Light Today", "Tuolumne", "Better Days", "I Won't Hold On"]}, {"id": "earthling", "title": "Earthling (EV, 2022)", "abbrev": "EARTH.", "artist": "Eddie Vedder", "year": 2022, "color": "var(--ev)", "songs": ["Invincible", "Power of Right", "Long Way", "The Dark", "Brother the Cloud", "Fallout Today", "The Haves", "Good and Evil", "Rose of Jericho", "Try", "Picture", "Mrs. Mills", "On My Way", "Waving Palms"]}, {"id": "covers", "title": "Covers & tributos", "abbrev": "COV.", "artist": "Ambos", "year": 0, "color": "var(--ink-mute)", "songs": ["Baba O'Riley", "Rockin' in the Free World", "I Believe in Miracles", "Last Kiss", "Save It for Later", "I Wanna Be Your Boyfriend", "Comfortably Numb", "Imagine", "Mother", "All Along the Watchtower", "Interstellar Overdrive", "Blitzkrieg Bop", "Mountain Song", "I Want You So Hard", "Modern Girl", "Walking the Cow", "You've Got to Hide Your Love Away", "Blackbird", "Forever Young", "Driftin'", "Open All Night", "Keep Me in Your Heart", "Pulled Up", "We Belong Together", "It's OK", "Trouble", "Don't Gimme No Lip", "Sonic Reducer", "Fuckin' Up", "Rain", "Redemption Song", "Another Brick in the Wall, Part 2", "Eruption", "Little Wing", "I Won't Back Down", "Throw Your Arms Around Me", "Falling Slowly", "Love Reign O'er Me", "The Moon Song", "The Needle and the Damage Done", "Good Woman", "I'm One", "Picture in a Frame", "Masters of War", "Should I Stay or Should I Go", "Brain Damage", "Dream a Little Dream of Me", "Society", "Hard Sun", "Sleepless Nights", "4th of July", "Girl From the North Country", "Drive All Night", "I'm So Tired", "Wildflowers", "Millworker", "Hurt", "Bad", "Isn't It a Pity", "The Ship Song", "Don't Be Shy", "Here Comes the Sun", "Song of Good Hope", "After Hours", "I Am a Patriot"]}, {"id": "misc", "title": "Misc (Mother Love Bone, Temple of the Dog)", "abbrev": "MISC.", "artist": "Ambos", "year": 0, "color": "var(--ink-mute)", "songs": ["Crown of Thorns", "Reach Down", "I Am a Patriot", "Supersonic"]}];
+const SONGS_DB = {"meta":{"source":"pearljam.com/vitalogy/songs","updatedAt":"2026-04-20","totalSongs":295},"songs":{"i cant get no satisfaction":{"title":"(I Can't Get No) Satisfaction","type":"Cover","timesPlayed":14,"firstPlayed":"Jul. 14, 2022","lastPlayed":"Sep. 27, 2024","rarity":"rare"},"12 full":{"title":"1/2 Full","type":"Pearl Jam Original","timesPlayed":78,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Jul. 08, 2024","rarity":"regular"},"2000 mile blues":{"title":"2,000 Mile Blues","type":"Pearl Jam Original","timesPlayed":0,"firstPlayed":"","lastPlayed":"","rarity":"unreleased"},"25 minutes to go":{"title":"25 Minutes To Go","type":"Cover","timesPlayed":3,"firstPlayed":"Oct. 22, 2003","lastPlayed":"Oct. 28, 2003","rarity":"ultra-rare"},"4th of july":{"title":"4th of July","type":"Performed By Other Artist","timesPlayed":2,"firstPlayed":"Feb. 08, 2014","lastPlayed":"Feb. 25, 2014","rarity":"ultra-rare"},"99 problems with jayz":{"title":"99 Problems (with Jay-Z)","type":"Performed With Other Artist","timesPlayed":1,"firstPlayed":"Sep. 02, 2012","lastPlayed":"Sep. 02, 2012","rarity":"once-ever"},"a sort of homecoming":{"title":"A Sort Of Homecoming","type":"Cover","timesPlayed":2,"firstPlayed":"Nov. 08, 2006","lastPlayed":"Nov. 25, 2015","rarity":"ultra-rare"},"acoustic 1 demo":{"title":"Acoustic #1 (demo)","type":"Pearl Jam Original","timesPlayed":0,"firstPlayed":"","lastPlayed":"","rarity":"unreleased"},"across the universe":{"title":"Across The Universe","type":"Cover","timesPlayed":5,"firstPlayed":"Jun. 30, 1993","lastPlayed":"Apr. 07, 1994","rarity":"ultra-rare"},"act of love":{"title":"Act Of Love","type":"Performed With Other Artist","timesPlayed":10,"firstPlayed":"Jan. 14, 1995","lastPlayed":"Oct. 02, 2004","rarity":"rare"},"after hours":{"title":"After Hours","type":"Cover","timesPlayed":7,"firstPlayed":"Nov. 24, 2013","lastPlayed":"Dec. 06, 2013","rarity":"rare"},"again today":{"title":"Again Today","type":"Cover","timesPlayed":4,"firstPlayed":"Jun. 12, 2018","lastPlayed":"Oct. 02, 2021","rarity":"ultra-rare"},"aint nothing to do":{"title":"Ain't Nothing To Do","type":"Cover","timesPlayed":2,"firstPlayed":"Nov. 30, 1993","lastPlayed":"Dec. 02, 1993","rarity":"ultra-rare"},"aint talkin bout love":{"title":"Ain't Talkin 'Bout Love","type":"Cover","timesPlayed":3,"firstPlayed":"May. 15, 2010","lastPlayed":"Nov. 30, 2013","rarity":"ultra-rare"},"alive":{"title":"Alive","type":"Pearl Jam Original","timesPlayed":871,"firstPlayed":"Oct. 22, 1990","lastPlayed":"May. 18, 2025","rarity":"staple"},"all along the watchtower":{"title":"All Along The Watchtower","type":"Cover","timesPlayed":18,"firstPlayed":"Oct. 02, 2004","lastPlayed":"May. 06, 2025","rarity":"uncommon"},"all i want is you":{"title":"All I Want Is You","type":"Cover","timesPlayed":1,"firstPlayed":"May. 08, 2016","lastPlayed":"May. 08, 2016","rarity":"once-ever"},"all night":{"title":"All Night","type":"Pearl Jam Original","timesPlayed":29,"firstPlayed":"Jun. 14, 2008","lastPlayed":"Aug. 31, 2024","rarity":"uncommon"},"all or none":{"title":"All Or None","type":"Pearl Jam Original","timesPlayed":17,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Aug. 10, 2018","rarity":"uncommon"},"all the way":{"title":"All The Way","type":"Performed By Other Artist","timesPlayed":4,"firstPlayed":"Aug. 02, 2007","lastPlayed":"Aug. 22, 2016","rarity":"ultra-rare"},"all those yesterdays":{"title":"All Those Yesterdays","type":"Pearl Jam Original","timesPlayed":26,"firstPlayed":"Jun. 21, 1998","lastPlayed":"May. 01, 2025","rarity":"uncommon"},"alone":{"title":"Alone","type":"Pearl Jam Original","timesPlayed":52,"firstPlayed":"Oct. 22, 1990","lastPlayed":"Nov. 23, 2024","rarity":"regular"},"alright":{"title":"Alright","type":"Pearl Jam Original","timesPlayed":6,"firstPlayed":"Sep. 26, 2021","lastPlayed":"Sep. 20, 2022","rarity":"rare"},"american girl":{"title":"American Girl","type":"Cover","timesPlayed":1,"firstPlayed":"Jun. 25, 2022","lastPlayed":"Jun. 25, 2022","rarity":"once-ever"},"american in me":{"title":"American In Me","type":"Cover","timesPlayed":11,"firstPlayed":"Sep. 24, 2004","lastPlayed":"Nov. 30, 2006","rarity":"rare"},"american pie":{"title":"American Pie","type":"Cover","timesPlayed":3,"firstPlayed":"Apr. 08, 1994","lastPlayed":"Oct. 01, 1994","rarity":"ultra-rare"},"amongst the waves":{"title":"Amongst The Waves","type":"Pearl Jam Original","timesPlayed":57,"firstPlayed":"Sep. 21, 2009","lastPlayed":"May. 13, 2025","rarity":"regular"},"androgynous mind":{"title":"Androgynous Mind","type":"Cover","timesPlayed":23,"firstPlayed":"Apr. 03, 1994","lastPlayed":"Dec. 07, 2005","rarity":"uncommon"},"angel":{"title":"Angel","type":"Pearl Jam Original","timesPlayed":6,"firstPlayed":"May. 17, 1992","lastPlayed":"Aug. 07, 2016","rarity":"rare"},"angie":{"title":"Angie","type":"Cover","timesPlayed":4,"firstPlayed":"Jul. 17, 1993","lastPlayed":"Jul. 05, 2018","rarity":"ultra-rare"},"animal":{"title":"Animal","type":"Pearl Jam Original","timesPlayed":426,"firstPlayed":"May. 13, 1993","lastPlayed":"Nov. 21, 2024","rarity":"staple"},"another brick in the wall":{"title":"Another Brick In The Wall","type":"Cover","timesPlayed":49,"firstPlayed":"Mar. 28, 1994","lastPlayed":"Sep. 20, 2022","rarity":"uncommon"},"arc":{"title":"Arc","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Jun. 05, 2003","lastPlayed":"Jul. 18, 2003","rarity":"rare"},"arms aloft":{"title":"Arms Aloft","type":"Cover","timesPlayed":17,"firstPlayed":"Jun. 22, 2010","lastPlayed":"Sep. 04, 2018","rarity":"uncommon"},"army reserve":{"title":"Army Reserve","type":"Pearl Jam Original","timesPlayed":31,"firstPlayed":"Apr. 20, 2006","lastPlayed":"Sep. 02, 2018","rarity":"uncommon"},"around the bend":{"title":"Around The Bend","type":"Pearl Jam Original","timesPlayed":14,"firstPlayed":"Sep. 14, 1996","lastPlayed":"Jul. 17, 2018","rarity":"rare"},"atomic dog":{"title":"Atomic Dog","type":"Cover","timesPlayed":10,"firstPlayed":"May. 16, 2006","lastPlayed":"May. 08, 2016","rarity":"rare"},"baba oriley":{"title":"Baba O'Riley","type":"Cover","timesPlayed":190,"firstPlayed":"Jan. 17, 1992","lastPlayed":"May. 16, 2025","rarity":"staple"},"bee girl":{"title":"Bee Girl","type":"Pearl Jam Original","timesPlayed":25,"firstPlayed":"Oct. 02, 1994","lastPlayed":"May. 13, 2025","rarity":"uncommon"},"better days":{"title":"Better Days","type":"Performed By Other Artist","timesPlayed":4,"firstPlayed":"May. 07, 2014","lastPlayed":"Mar. 30, 2018","rarity":"ultra-rare"},"better man":{"title":"Better Man","type":"Pearl Jam Original","timesPlayed":571,"firstPlayed":"May. 13, 1993","lastPlayed":"May. 18, 2025","rarity":"staple"},"big wave":{"title":"Big Wave","type":"Pearl Jam Original","timesPlayed":31,"firstPlayed":"Jul. 07, 2006","lastPlayed":"Sep. 29, 2024","rarity":"uncommon"},"black":{"title":"Black","type":"Pearl Jam Original","timesPlayed":626,"firstPlayed":"Oct. 22, 1990","lastPlayed":"May. 16, 2025","rarity":"staple"},"black diamond":{"title":"Black Diamond","type":"Cover","timesPlayed":4,"firstPlayed":"Aug. 02, 2007","lastPlayed":"Jul. 25, 2022","rarity":"ultra-rare"},"black red yellow":{"title":"Black, Red, Yellow","type":"Pearl Jam Original","timesPlayed":8,"firstPlayed":"Sep. 26, 1996","lastPlayed":"Aug. 22, 2016","rarity":"rare"},"bleed for me":{"title":"Bleed For Me","type":"Cover","timesPlayed":8,"firstPlayed":"Sep. 28, 2004","lastPlayed":"Dec. 03, 2005","rarity":"rare"},"blitzkrieg bop":{"title":"Blitzkrieg Bop","type":"Cover","timesPlayed":23,"firstPlayed":"Oct. 01, 2004","lastPlayed":"Mar. 21, 2018","rarity":"uncommon"},"blood":{"title":"Blood","type":"Pearl Jam Original","timesPlayed":200,"firstPlayed":"May. 13, 1993","lastPlayed":"Sep. 15, 2024","rarity":"staple"},"brain of j":{"title":"Brain Of J.","type":"Pearl Jam Original","timesPlayed":135,"firstPlayed":"Nov. 02, 1995","lastPlayed":"May. 06, 2025","rarity":"regular"},"breakerfall":{"title":"Breakerfall","type":"Pearl Jam Original","timesPlayed":90,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 16, 2024","rarity":"regular"},"breath":{"title":"Breath","type":"Pearl Jam Original","timesPlayed":91,"firstPlayed":"Oct. 22, 1990","lastPlayed":"Nov. 13, 2024","rarity":"regular"},"brother":{"title":"Brother","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Feb. 07, 1991","lastPlayed":"May. 18, 2010","rarity":"rare"},"buhleaguer":{"title":"Bu$hleaguer","type":"Pearl Jam Original","timesPlayed":32,"firstPlayed":"Dec. 06, 2002","lastPlayed":"Jun. 18, 2007","rarity":"uncommon"},"buckle up":{"title":"Buckle Up","type":"Pearl Jam Original","timesPlayed":7,"firstPlayed":"Oct. 01, 2021","lastPlayed":"Aug. 31, 2023","rarity":"rare"},"bugs":{"title":"Bugs","type":"Pearl Jam Original","timesPlayed":3,"firstPlayed":"Oct. 31, 2009","lastPlayed":"Jul. 19, 2013","rarity":"ultra-rare"},"cant deny me":{"title":"Can't Deny Me","type":"Pearl Jam Original","timesPlayed":16,"firstPlayed":"Mar. 13, 2018","lastPlayed":"Sep. 04, 2018","rarity":"uncommon"},"cant keep":{"title":"Can't Keep","type":"Pearl Jam Original","timesPlayed":27,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Apr. 29, 2025","rarity":"uncommon"},"comatose":{"title":"Comatose","type":"Pearl Jam Original","timesPlayed":106,"firstPlayed":"Mar. 18, 2005","lastPlayed":"May. 16, 2025","rarity":"regular"},"come back":{"title":"Come Back","type":"Pearl Jam Original","timesPlayed":58,"firstPlayed":"May. 05, 2006","lastPlayed":"May. 06, 2025","rarity":"regular"},"comfortably numb":{"title":"Comfortably Numb","type":"Cover","timesPlayed":23,"firstPlayed":"Nov. 11, 2015","lastPlayed":"Jun. 18, 2022","rarity":"uncommon"},"corduroy":{"title":"Corduroy","type":"Pearl Jam Original","timesPlayed":638,"firstPlayed":"Mar. 15, 1994","lastPlayed":"May. 16, 2025","rarity":"staple"},"crazy mary":{"title":"Crazy Mary","type":"Cover","timesPlayed":179,"firstPlayed":"May. 13, 1992","lastPlayed":"May. 18, 2025","rarity":"staple"},"cropduster":{"title":"Cropduster","type":"Pearl Jam Original","timesPlayed":44,"firstPlayed":"Dec. 05, 2002","lastPlayed":"May. 12, 2016","rarity":"uncommon"},"crown of thorns":{"title":"Crown Of Thorns","type":"Cover","timesPlayed":38,"firstPlayed":"Oct. 22, 2000","lastPlayed":"Sep. 07, 2024","rarity":"uncommon"},"dance of the clairvoyants":{"title":"Dance Of The Clairvoyants","type":"Pearl Jam Original","timesPlayed":35,"firstPlayed":"Sep. 18, 2021","lastPlayed":"Nov. 10, 2024","rarity":"uncommon"},"dark matter":{"title":"Dark Matter","type":"Pearl Jam Original","timesPlayed":43,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"daughter":{"title":"Daughter","type":"Pearl Jam Original","timesPlayed":584,"firstPlayed":"Nov. 01, 1992","lastPlayed":"May. 16, 2025","rarity":"staple"},"deep":{"title":"Deep","type":"Pearl Jam Original","timesPlayed":217,"firstPlayed":"Feb. 09, 1991","lastPlayed":"May. 18, 2025","rarity":"staple"},"dirty frank":{"title":"Dirty Frank","type":"Pearl Jam Original","timesPlayed":10,"firstPlayed":"Mar. 09, 1992","lastPlayed":"Sep. 09, 2006","rarity":"rare"},"dissident":{"title":"Dissident","type":"Pearl Jam Original","timesPlayed":208,"firstPlayed":"May. 13, 1993","lastPlayed":"May. 01, 2025","rarity":"staple"},"do the evolution":{"title":"Do The Evolution","type":"Pearl Jam Original","timesPlayed":590,"firstPlayed":"Nov. 12, 1997","lastPlayed":"May. 18, 2025","rarity":"staple"},"down":{"title":"Down","type":"Pearl Jam Original","timesPlayed":100,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Apr. 24, 2025","rarity":"regular"},"dream a little dream of me":{"title":"Dream a Little Dream Of Me","type":"Cover","timesPlayed":4,"firstPlayed":"Feb. 25, 2014","lastPlayed":"Jun. 27, 2017","rarity":"ultra-rare"},"driven to tears":{"title":"Driven To Tears","type":"Cover","timesPlayed":13,"firstPlayed":"Jun. 25, 1992","lastPlayed":"May. 02, 2016","rarity":"rare"},"drive all night":{"title":"Drive All Night","type":"Cover","timesPlayed":5,"firstPlayed":"Feb. 25, 2014","lastPlayed":"Jun. 09, 2019","rarity":"ultra-rare"},"education":{"title":"Education","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Aug. 23, 2006","lastPlayed":"Apr. 28, 2016","rarity":"rare"},"elderly woman behind the counter in a small town":{"title":"Elderly Woman Behind The Counter In A Small Town","type":"Pearl Jam Original","timesPlayed":517,"firstPlayed":"Jun. 16, 1993","lastPlayed":"May. 18, 2025","rarity":"staple"},"eruption":{"title":"Eruption","type":"Cover","timesPlayed":25,"firstPlayed":"Jul. 05, 2012","lastPlayed":"Nov. 08, 2024","rarity":"uncommon"},"evacuation":{"title":"Evacuation","type":"Pearl Jam Original","timesPlayed":30,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 10, 2016","rarity":"uncommon"},"even flow":{"title":"Even Flow","type":"Pearl Jam Original","timesPlayed":930,"firstPlayed":"Oct. 22, 1990","lastPlayed":"May. 18, 2025","rarity":"staple"},"faithfull":{"title":"Faithfull","type":"Pearl Jam Original","timesPlayed":107,"firstPlayed":"Feb. 20, 1998","lastPlayed":"May. 18, 2025","rarity":"regular"},"far behind":{"title":"Far Behind","type":"Performed By Other Artist","timesPlayed":36,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Sep. 28, 2019","rarity":"uncommon"},"fatal":{"title":"Fatal","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Oct. 22, 2003","lastPlayed":"Jun. 28, 2022","rarity":"rare"},"footsteps":{"title":"Footsteps","type":"Pearl Jam Original","timesPlayed":131,"firstPlayed":"May. 12, 1992","lastPlayed":"May. 16, 2025","rarity":"regular"},"force of nature":{"title":"Force of Nature","type":"Pearl Jam Original","timesPlayed":11,"firstPlayed":"Sep. 30, 2009","lastPlayed":"May. 20, 2010","rarity":"rare"},"fortunate son":{"title":"Fortunate Son","type":"Cover","timesPlayed":21,"firstPlayed":"Feb. 23, 2003","lastPlayed":"Sep. 30, 2012","rarity":"uncommon"},"fuckin up":{"title":"Fuckin' Up","type":"Cover","timesPlayed":75,"firstPlayed":"Jun. 16, 1993","lastPlayed":"Sep. 17, 2024","rarity":"regular"},"future days":{"title":"Future Days","type":"Pearl Jam Original","timesPlayed":18,"firstPlayed":"Jul. 19, 2013","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"garden":{"title":"Garden","type":"Pearl Jam Original","timesPlayed":172,"firstPlayed":"Feb. 07, 1991","lastPlayed":"May. 18, 2025","rarity":"staple"},"get right":{"title":"Get Right","type":"Pearl Jam Original","timesPlayed":17,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Jul. 17, 2003","rarity":"uncommon"},"getaway":{"title":"Getaway","type":"Pearl Jam Original","timesPlayed":16,"firstPlayed":"Oct. 30, 2013","lastPlayed":"Aug. 18, 2018","rarity":"uncommon"},"ghost":{"title":"Ghost","type":"Pearl Jam Original","timesPlayed":21,"firstPlayed":"Dec. 06, 2002","lastPlayed":"Jul. 10, 2018","rarity":"uncommon"},"gimme some truth":{"title":"Gimme Some Truth","type":"Cover","timesPlayed":18,"firstPlayed":"Oct. 20, 2001","lastPlayed":"Sep. 04, 2024","rarity":"uncommon"},"given to fly":{"title":"Given To Fly","type":"Pearl Jam Original","timesPlayed":530,"firstPlayed":"Nov. 12, 1997","lastPlayed":"May. 16, 2025","rarity":"staple"},"glorified g":{"title":"Glorified G","type":"Pearl Jam Original","timesPlayed":144,"firstPlayed":"Jun. 16, 1993","lastPlayed":"Sep. 15, 2024","rarity":"regular"},"go":{"title":"Go","type":"Pearl Jam Original","timesPlayed":355,"firstPlayed":"May. 13, 1993","lastPlayed":"May. 22, 2024","rarity":"staple"},"gods dice":{"title":"Gods' Dice","type":"Pearl Jam Original","timesPlayed":55,"firstPlayed":"May. 10, 2000","lastPlayed":"Sep. 05, 2023","rarity":"regular"},"gone":{"title":"Gone","type":"Pearl Jam Original","timesPlayed":40,"firstPlayed":"Oct. 01, 2005","lastPlayed":"Oct. 17, 2014","rarity":"uncommon"},"gonna see my friend":{"title":"Gonna See My Friend","type":"Pearl Jam Original","timesPlayed":15,"firstPlayed":"Sep. 21, 2009","lastPlayed":"Apr. 28, 2016","rarity":"rare"},"good woman":{"title":"Good Woman","type":"Cover","timesPlayed":2,"firstPlayed":"Apr. 09, 2016","lastPlayed":"Jul. 08, 2022","rarity":"ultra-rare"},"got some":{"title":"Got Some","type":"Pearl Jam Original","timesPlayed":112,"firstPlayed":"Aug. 08, 2009","lastPlayed":"Sep. 27, 2024","rarity":"regular"},"got to give":{"title":"Got to Give","type":"Pearl Jam Original","timesPlayed":4,"firstPlayed":"May. 06, 2024","lastPlayed":"May. 16, 2025","rarity":"ultra-rare"},"green disease":{"title":"Green Disease","type":"Pearl Jam Original","timesPlayed":66,"firstPlayed":"Sep. 23, 2002","lastPlayed":"May. 06, 2025","rarity":"regular"},"grievance":{"title":"Grievance","type":"Pearl Jam Original","timesPlayed":145,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 16, 2025","rarity":"regular"},"guaranteed":{"title":"Guaranteed","type":"Performed By Other Artist","timesPlayed":1,"firstPlayed":"Jun. 17, 2008","lastPlayed":"Jun. 17, 2008","rarity":"once-ever"},"habit":{"title":"Habit","type":"Pearl Jam Original","timesPlayed":103,"firstPlayed":"Jun. 19, 1995","lastPlayed":"Nov. 08, 2024","rarity":"regular"},"hail hail":{"title":"Hail, Hail","type":"Pearl Jam Original","timesPlayed":253,"firstPlayed":"Sep. 14, 1996","lastPlayed":"May. 08, 2025","rarity":"staple"},"hard sun":{"title":"Hard Sun","type":"Cover","timesPlayed":39,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Sep. 28, 2019","rarity":"uncommon"},"hard to imagine":{"title":"Hard To Imagine","type":"Pearl Jam Original","timesPlayed":50,"firstPlayed":"Aug. 07, 1992","lastPlayed":"Nov. 08, 2024","rarity":"uncommon"},"help help":{"title":"Help Help","type":"Pearl Jam Original","timesPlayed":13,"firstPlayed":"Feb. 16, 2003","lastPlayed":"Aug. 08, 2018","rarity":"rare"},"here comes the sun":{"title":"Here Comes The Sun","type":"Performed By Other Artist","timesPlayed":3,"firstPlayed":"Jun. 06, 2017","lastPlayed":"Jun. 28, 2019","rarity":"ultra-rare"},"heroes":{"title":"Heroes","type":"Performed By Other Artist","timesPlayed":7,"firstPlayed":"May. 27, 2017","lastPlayed":"Jun. 26, 2017","rarity":"rare"},"hey hey my my":{"title":"Hey Hey My My","type":"Cover","timesPlayed":12,"firstPlayed":"Apr. 06, 1994","lastPlayed":"Oct. 25, 2003","rarity":"rare"},"hunger strike":{"title":"Hunger Strike","type":"Performed By Other Artist","timesPlayed":31,"firstPlayed":"Feb. 09, 1992","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"hurt":{"title":"Hurt","type":"Cover","timesPlayed":1,"firstPlayed":"May. 30, 2024","lastPlayed":"May. 30, 2024","rarity":"once-ever"},"i am a patriot":{"title":"I Am A Patriot","type":"Cover","timesPlayed":27,"firstPlayed":"Nov. 01, 1992","lastPlayed":"Sep. 17, 2024","rarity":"uncommon"},"i am mine":{"title":"I Am Mine","type":"Pearl Jam Original","timesPlayed":122,"firstPlayed":"Oct. 21, 2001","lastPlayed":"Nov. 13, 2024","rarity":"regular"},"i believe in miracles":{"title":"I Believe In Miracles","type":"Cover","timesPlayed":82,"firstPlayed":"Sep. 13, 1995","lastPlayed":"Jun. 30, 2022","rarity":"regular"},"i got id":{"title":"I Got Id","type":"Pearl Jam Original","timesPlayed":158,"firstPlayed":"Feb. 21, 1995","lastPlayed":"Nov. 13, 2024","rarity":"staple"},"i got you":{"title":"I Got You","type":"Cover","timesPlayed":11,"firstPlayed":"Mar. 08, 1995","lastPlayed":"Nov. 29, 2009","rarity":"rare"},"i wanna be your boyfriend":{"title":"I Wanna Be Your Boyfriend","type":"Cover","timesPlayed":10,"firstPlayed":"Oct. 28, 2003","lastPlayed":"Jun. 26, 2018","rarity":"rare"},"i wont back down":{"title":"I Won't Back Down","type":"Cover","timesPlayed":28,"firstPlayed":"Mar. 09, 1994","lastPlayed":"Apr. 24, 2025","rarity":"uncommon"},"im open":{"title":"I'm Open","type":"Pearl Jam Original","timesPlayed":18,"firstPlayed":"May. 13, 2006","lastPlayed":"May. 13, 2024","rarity":"uncommon"},"im so tired":{"title":"I'm So Tired","type":"Cover","timesPlayed":12,"firstPlayed":"May. 27, 2017","lastPlayed":"Jun. 30, 2019","rarity":"rare"},"ive got a feeling":{"title":"I've Got A Feeling","type":"Cover","timesPlayed":31,"firstPlayed":"Sep. 28, 1991","lastPlayed":"Aug. 08, 2018","rarity":"uncommon"},"imagine":{"title":"Imagine","type":"Cover","timesPlayed":24,"firstPlayed":"Oct. 03, 2014","lastPlayed":"Sep. 03, 2024","rarity":"uncommon"},"immortality":{"title":"Immortality","type":"Pearl Jam Original","timesPlayed":186,"firstPlayed":"Apr. 11, 1994","lastPlayed":"May. 18, 2025","rarity":"staple"},"in hiding":{"title":"In Hiding","type":"Pearl Jam Original","timesPlayed":100,"firstPlayed":"Jan. 31, 1998","lastPlayed":"Apr. 29, 2025","rarity":"regular"},"in my tree":{"title":"In My Tree","type":"Pearl Jam Original","timesPlayed":103,"firstPlayed":"Sep. 14, 1996","lastPlayed":"May. 13, 2025","rarity":"regular"},"indifference":{"title":"Indifference","type":"Pearl Jam Original","timesPlayed":179,"firstPlayed":"Jun. 16, 1993","lastPlayed":"May. 16, 2025","rarity":"staple"},"infallible":{"title":"Infallible","type":"Pearl Jam Original","timesPlayed":22,"firstPlayed":"Oct. 11, 2013","lastPlayed":"Apr. 21, 2016","rarity":"uncommon"},"inside job":{"title":"Inside Job","type":"Pearl Jam Original","timesPlayed":71,"firstPlayed":"May. 09, 2006","lastPlayed":"Apr. 29, 2025","rarity":"regular"},"insignificance":{"title":"Insignificance","type":"Pearl Jam Original","timesPlayed":174,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 18, 2025","rarity":"staple"},"interstellar overdrive":{"title":"Interstellar Overdrive","type":"Cover","timesPlayed":69,"firstPlayed":"May. 07, 1998","lastPlayed":"Nov. 21, 2024","rarity":"regular"},"isnt it a pity":{"title":"Isn't It a Pity","type":"Cover","timesPlayed":10,"firstPlayed":"Jun. 06, 2017","lastPlayed":"Sep. 28, 2019","rarity":"rare"},"its ok":{"title":"It's Ok","type":"Cover","timesPlayed":41,"firstPlayed":"Nov. 03, 1996","lastPlayed":"May. 16, 2025","rarity":"uncommon"},"jeremy":{"title":"Jeremy","type":"Pearl Jam Original","timesPlayed":595,"firstPlayed":"Feb. 01, 1991","lastPlayed":"May. 16, 2025","rarity":"staple"},"just breathe":{"title":"Just Breathe","type":"Pearl Jam Original","timesPlayed":124,"firstPlayed":"Sep. 21, 2009","lastPlayed":"May. 11, 2025","rarity":"regular"},"keep me in your heart":{"title":"Keep Me In Your Heart","type":"Cover","timesPlayed":4,"firstPlayed":"May. 06, 2024","lastPlayed":"May. 06, 2025","rarity":"ultra-rare"},"kick out the jams":{"title":"Kick Out The Jams","type":"Cover","timesPlayed":28,"firstPlayed":"Oct. 03, 2004","lastPlayed":"Aug. 10, 2018","rarity":"uncommon"},"know your rights":{"title":"Know Your Rights","type":"Cover","timesPlayed":23,"firstPlayed":"Feb. 20, 2003","lastPlayed":"Aug. 18, 2018","rarity":"uncommon"},"last exit":{"title":"Last Exit","type":"Pearl Jam Original","timesPlayed":246,"firstPlayed":"Nov. 16, 1993","lastPlayed":"May. 13, 2025","rarity":"staple"},"last kiss":{"title":"Last Kiss","type":"Cover","timesPlayed":144,"firstPlayed":"May. 07, 1998","lastPlayed":"Nov. 21, 2024","rarity":"regular"},"leash":{"title":"Leash","type":"Pearl Jam Original","timesPlayed":136,"firstPlayed":"Nov. 09, 1991","lastPlayed":"May. 01, 2025","rarity":"regular"},"leatherman":{"title":"Leatherman","type":"Pearl Jam Original","timesPlayed":67,"firstPlayed":"Mar. 19, 1998","lastPlayed":"Apr. 24, 2025","rarity":"regular"},"leaving here":{"title":"Leaving Here","type":"Cover","timesPlayed":79,"firstPlayed":"Jun. 19, 1995","lastPlayed":"May. 13, 2025","rarity":"regular"},"let the records play":{"title":"Let The Records Play","type":"Pearl Jam Original","timesPlayed":21,"firstPlayed":"Oct. 11, 2013","lastPlayed":"Apr. 29, 2016","rarity":"uncommon"},"life wasted":{"title":"Life Wasted","type":"Pearl Jam Original","timesPlayed":114,"firstPlayed":"Apr. 20, 2006","lastPlayed":"May. 13, 2025","rarity":"regular"},"light years":{"title":"Light Years","type":"Pearl Jam Original","timesPlayed":97,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 11, 2025","rarity":"regular"},"lightning bolt":{"title":"Lightning Bolt","type":"Pearl Jam Original","timesPlayed":97,"firstPlayed":"Jul. 19, 2013","lastPlayed":"Aug. 26, 2024","rarity":"regular"},"little wing":{"title":"Little Wing","type":"Cover","timesPlayed":30,"firstPlayed":"Aug. 25, 1992","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"long nights":{"title":"Long Nights","type":"Performed By Other Artist","timesPlayed":12,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 30, 2019","rarity":"rare"},"love boat captain":{"title":"Love Boat Captain","type":"Pearl Jam Original","timesPlayed":101,"firstPlayed":"Sep. 23, 2002","lastPlayed":"May. 03, 2025","rarity":"regular"},"love reign oer me":{"title":"Love, Reign O'er Me","type":"Cover","timesPlayed":25,"firstPlayed":"Jun. 26, 2007","lastPlayed":"Aug. 07, 2016","rarity":"uncommon"},"low light":{"title":"Low Light","type":"Pearl Jam Original","timesPlayed":96,"firstPlayed":"Oct. 21, 2001","lastPlayed":"May. 16, 2025","rarity":"regular"},"lukin":{"title":"Lukin","type":"Pearl Jam Original","timesPlayed":250,"firstPlayed":"Feb. 05, 1995","lastPlayed":"May. 18, 2025","rarity":"staple"},"man of the hour":{"title":"Man Of The Hour","type":"Pearl Jam Original","timesPlayed":54,"firstPlayed":"Oct. 22, 2003","lastPlayed":"May. 16, 2025","rarity":"regular"},"mankind":{"title":"Mankind","type":"Pearl Jam Original","timesPlayed":45,"firstPlayed":"Sep. 14, 1996","lastPlayed":"Jul. 25, 2022","rarity":"uncommon"},"marker in the sand":{"title":"Marker In The Sand","type":"Pearl Jam Original","timesPlayed":48,"firstPlayed":"Apr. 20, 2006","lastPlayed":"Sep. 07, 2023","rarity":"uncommon"},"masters of war":{"title":"Masters Of War","type":"Cover","timesPlayed":17,"firstPlayed":"Oct. 22, 2003","lastPlayed":"Aug. 20, 2016","rarity":"uncommon"},"mfc":{"title":"MFC","type":"Pearl Jam Original","timesPlayed":167,"firstPlayed":"Feb. 20, 1998","lastPlayed":"May. 13, 2025","rarity":"staple"},"millworker":{"title":"Millworker","type":"Cover","timesPlayed":1,"firstPlayed":"Oct. 03, 2004","lastPlayed":"Oct. 03, 2004","rarity":"once-ever"},"mind your manners":{"title":"Mind Your Manners","type":"Pearl Jam Original","timesPlayed":133,"firstPlayed":"Jul. 16, 2013","lastPlayed":"May. 16, 2025","rarity":"regular"},"modern girl":{"title":"Modern Girl","type":"Cover","timesPlayed":65,"firstPlayed":"Sep. 12, 2005","lastPlayed":"May. 08, 2025","rarity":"regular"},"mother":{"title":"Mother","type":"Cover","timesPlayed":23,"firstPlayed":"Jul. 05, 1998","lastPlayed":"Nov. 25, 2015","rarity":"uncommon"},"mountain song":{"title":"Mountain Song","type":"Cover","timesPlayed":2,"firstPlayed":"Oct. 04, 2009","lastPlayed":"Mar. 24, 2018","rarity":"ultra-rare"},"my city of ruins":{"title":"My City Of Ruins","type":"Cover","timesPlayed":4,"firstPlayed":"Sep. 18, 2021","lastPlayed":"May. 16, 2025","rarity":"ultra-rare"},"my fathers son":{"title":"My Father's Son","type":"Pearl Jam Original","timesPlayed":13,"firstPlayed":"Oct. 12, 2013","lastPlayed":"Apr. 11, 2016","rarity":"rare"},"never destination":{"title":"Never Destination","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Sep. 18, 2021","lastPlayed":"Sep. 19, 2023","rarity":"rare"},"no ceiling":{"title":"No Ceiling","type":"Performed By Other Artist","timesPlayed":12,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 25, 2019","rarity":"rare"},"no more":{"title":"No More","type":"Performed By Other Artist","timesPlayed":3,"firstPlayed":"Jun. 14, 2008","lastPlayed":"Jul. 01, 2008","rarity":"ultra-rare"},"no way":{"title":"No Way","type":"Pearl Jam Original","timesPlayed":12,"firstPlayed":"Aug. 25, 1998","lastPlayed":"Oct. 20, 2014","rarity":"rare"},"not for you":{"title":"Not For You","type":"Pearl Jam Original","timesPlayed":256,"firstPlayed":"Mar. 07, 1994","lastPlayed":"May. 08, 2025","rarity":"staple"},"nothing as it seems":{"title":"Nothing As It Seems","type":"Pearl Jam Original","timesPlayed":104,"firstPlayed":"Oct. 31, 1999","lastPlayed":"Aug. 22, 2024","rarity":"regular"},"nothingman":{"title":"Nothingman","type":"Pearl Jam Original","timesPlayed":152,"firstPlayed":"Mar. 20, 1994","lastPlayed":"May. 18, 2025","rarity":"staple"},"oceans":{"title":"Oceans","type":"Pearl Jam Original","timesPlayed":103,"firstPlayed":"Jan. 11, 1991","lastPlayed":"Apr. 24, 2025","rarity":"regular"},"of the earth":{"title":"Of The Earth","type":"Pearl Jam Original","timesPlayed":12,"firstPlayed":"Jun. 22, 2010","lastPlayed":"Aug. 22, 2016","rarity":"rare"},"of the girl":{"title":"Of The Girl","type":"Pearl Jam Original","timesPlayed":58,"firstPlayed":"May. 10, 2000","lastPlayed":"Apr. 26, 2025","rarity":"regular"},"off he goes":{"title":"Off He Goes","type":"Pearl Jam Original","timesPlayed":127,"firstPlayed":"Sep. 14, 1996","lastPlayed":"May. 01, 2025","rarity":"regular"},"ol":{"title":"Olé","type":"Pearl Jam Original","timesPlayed":13,"firstPlayed":"Sep. 12, 2011","lastPlayed":"Mar. 31, 2013","rarity":"rare"},"once":{"title":"Once","type":"Pearl Jam Original","timesPlayed":368,"firstPlayed":"Oct. 22, 1990","lastPlayed":"May. 18, 2025","rarity":"staple"},"open all night":{"title":"Open All Night","type":"Cover","timesPlayed":1,"firstPlayed":"Oct. 09, 2014","lastPlayed":"Oct. 09, 2014","rarity":"once-ever"},"out of my mind":{"title":"Out of My Mind","type":"Pearl Jam Original","timesPlayed":7,"firstPlayed":"Apr. 02, 1994","lastPlayed":"Sep. 03, 2024","rarity":"rare"},"outshined":{"title":"Outshined","type":"Cover","timesPlayed":17,"firstPlayed":"Aug. 23, 1991","lastPlayed":"Aug. 25, 1998","rarity":"uncommon"},"parachutes":{"title":"Parachutes","type":"Pearl Jam Original","timesPlayed":23,"firstPlayed":"May. 25, 2006","lastPlayed":"Sep. 10, 2022","rarity":"uncommon"},"parting ways":{"title":"Parting Ways","type":"Pearl Jam Original","timesPlayed":22,"firstPlayed":"Oct. 07, 2000","lastPlayed":"Jun. 18, 2018","rarity":"uncommon"},"pendulum":{"title":"Pendulum","type":"Pearl Jam Original","timesPlayed":49,"firstPlayed":"Oct. 11, 2013","lastPlayed":"Sep. 03, 2024","rarity":"uncommon"},"people have the power":{"title":"People Have The Power","type":"Performed By Other Artist","timesPlayed":8,"firstPlayed":"Apr. 25, 2003","lastPlayed":"Jun. 25, 2022","rarity":"rare"},"picture in a frame":{"title":"Picture In A Frame","type":"Cover","timesPlayed":6,"firstPlayed":"Sep. 17, 2006","lastPlayed":"May. 13, 2024","rarity":"rare"},"pilate":{"title":"Pilate","type":"Pearl Jam Original","timesPlayed":35,"firstPlayed":"Jan. 31, 1998","lastPlayed":"May. 30, 2024","rarity":"uncommon"},"porch":{"title":"Porch","type":"Pearl Jam Original","timesPlayed":662,"firstPlayed":"Dec. 22, 1990","lastPlayed":"May. 16, 2025","rarity":"staple"},"present tense":{"title":"Present Tense","type":"Pearl Jam Original","timesPlayed":157,"firstPlayed":"Sep. 14, 1996","lastPlayed":"May. 11, 2025","rarity":"staple"},"public image":{"title":"Public Image","type":"Cover","timesPlayed":10,"firstPlayed":"Jun. 30, 2010","lastPlayed":"Jul. 08, 2022","rarity":"rare"},"pulled up":{"title":"Pulled Up","type":"Cover","timesPlayed":5,"firstPlayed":"Jun. 08, 1992","lastPlayed":"Mar. 24, 2018","rarity":"ultra-rare"},"push me pull me":{"title":"Push Me, Pull Me","type":"Pearl Jam Original","timesPlayed":14,"firstPlayed":"Mar. 11, 1998","lastPlayed":"Oct. 20, 2014","rarity":"rare"},"quick escape":{"title":"Quick Escape","type":"Pearl Jam Original","timesPlayed":30,"firstPlayed":"Sep. 18, 2021","lastPlayed":"Nov. 13, 2024","rarity":"uncommon"},"rain":{"title":"Rain","type":"Cover","timesPlayed":12,"firstPlayed":"Jun. 08, 1992","lastPlayed":"Jun. 30, 2022","rarity":"rare"},"rats":{"title":"Rats","type":"Pearl Jam Original","timesPlayed":63,"firstPlayed":"May. 13, 1993","lastPlayed":"Sep. 09, 2024","rarity":"regular"},"react respond":{"title":"React, Respond","type":"Pearl Jam Original","timesPlayed":37,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 16, 2025","rarity":"uncommon"},"rearviewmirror":{"title":"Rearviewmirror","type":"Pearl Jam Original","timesPlayed":494,"firstPlayed":"May. 13, 1993","lastPlayed":"May. 18, 2025","rarity":"staple"},"red mosquito":{"title":"Red Mosquito","type":"Pearl Jam Original","timesPlayed":96,"firstPlayed":"Nov. 01, 1995","lastPlayed":"May. 03, 2025","rarity":"regular"},"redemption song":{"title":"Redemption Song","type":"Cover","timesPlayed":4,"firstPlayed":"Jun. 26, 1992","lastPlayed":"Nov. 17, 2015","rarity":"ultra-rare"},"release":{"title":"Release","type":"Pearl Jam Original","timesPlayed":184,"firstPlayed":"Oct. 22, 1990","lastPlayed":"May. 11, 2025","rarity":"staple"},"retrograde":{"title":"Retrograde","type":"Pearl Jam Original","timesPlayed":11,"firstPlayed":"Sep. 26, 2021","lastPlayed":"Sep. 19, 2023","rarity":"rare"},"rise":{"title":"Rise","type":"Performed By Other Artist","timesPlayed":2,"firstPlayed":"Apr. 21, 2016","lastPlayed":"Jul. 08, 2024","rarity":"ultra-rare"},"rival":{"title":"Rival","type":"Pearl Jam Original","timesPlayed":22,"firstPlayed":"Jun. 12, 2000","lastPlayed":"May. 10, 2016","rarity":"uncommon"},"river cross":{"title":"River Cross","type":"Pearl Jam Original","timesPlayed":9,"firstPlayed":"Oct. 01, 2021","lastPlayed":"May. 28, 2024","rarity":"rare"},"rockin in the free world":{"title":"Rockin' In The Free World","type":"Cover","timesPlayed":352,"firstPlayed":"Mar. 09, 1992","lastPlayed":"May. 18, 2025","rarity":"staple"},"romance":{"title":"Romance","type":"Cover","timesPlayed":14,"firstPlayed":"Aug. 07, 2000","lastPlayed":"Dec. 09, 2005","rarity":"rare"},"running":{"title":"Running","type":"Pearl Jam Original","timesPlayed":23,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"sad":{"title":"Sad","type":"Pearl Jam Original","timesPlayed":56,"firstPlayed":"Oct. 01, 2004","lastPlayed":"Sep. 18, 2022","rarity":"regular"},"satans bed":{"title":"Satan's Bed","type":"Pearl Jam Original","timesPlayed":42,"firstPlayed":"Apr. 03, 1994","lastPlayed":"May. 11, 2025","rarity":"uncommon"},"save it for later":{"title":"Save It For Later","type":"Cover","timesPlayed":165,"firstPlayed":"Sep. 26, 1996","lastPlayed":"May. 18, 2025","rarity":"staple"},"save you":{"title":"Save You","type":"Pearl Jam Original","timesPlayed":186,"firstPlayed":"Dec. 05, 2002","lastPlayed":"Nov. 23, 2024","rarity":"staple"},"scared of fear":{"title":"Scared Of Fear","type":"Pearl Jam Original","timesPlayed":30,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"setting forth":{"title":"Setting Forth","type":"Performed By Other Artist","timesPlayed":40,"firstPlayed":"Sep. 03, 2011","lastPlayed":"Aug. 13, 2018","rarity":"uncommon"},"setting sun":{"title":"Setting Sun","type":"Pearl Jam Original","timesPlayed":23,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"seven oclock":{"title":"Seven O'Clock","type":"Pearl Jam Original","timesPlayed":18,"firstPlayed":"Sep. 18, 2021","lastPlayed":"May. 10, 2024","rarity":"uncommon"},"severed hand":{"title":"Severed Hand","type":"Pearl Jam Original","timesPlayed":144,"firstPlayed":"Apr. 20, 2006","lastPlayed":"May. 16, 2025","rarity":"regular"},"should stay or should i go":{"title":"Should Stay or Should I Go","type":"Cover","timesPlayed":13,"firstPlayed":"May. 07, 2014","lastPlayed":"Jun. 28, 2019","rarity":"rare"},"sirens":{"title":"Sirens","type":"Pearl Jam Original","timesPlayed":74,"firstPlayed":"Oct. 11, 2013","lastPlayed":"Jul. 12, 2018","rarity":"regular"},"sleeping by myself":{"title":"Sleeping By Myself","type":"Performed By Other Artist","timesPlayed":22,"firstPlayed":"Nov. 21, 2013","lastPlayed":"Sep. 18, 2022","rarity":"uncommon"},"sleepless nights":{"title":"Sleepless Nights","type":"Performed By Other Artist","timesPlayed":19,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 28, 2019","rarity":"uncommon"},"sleight of hand":{"title":"Sleight Of Hand","type":"Pearl Jam Original","timesPlayed":52,"firstPlayed":"Jun. 14, 2000","lastPlayed":"May. 16, 2025","rarity":"regular"},"smile":{"title":"Smile","type":"Pearl Jam Original","timesPlayed":92,"firstPlayed":"Oct. 28, 1996","lastPlayed":"May. 11, 2025","rarity":"regular"},"society":{"title":"Society","type":"Cover","timesPlayed":2,"firstPlayed":"Jul. 09, 2016","lastPlayed":"Aug. 05, 2016","rarity":"ultra-rare"},"soldier of love":{"title":"Soldier Of Love","type":"Cover","timesPlayed":22,"firstPlayed":"Aug. 18, 1998","lastPlayed":"Apr. 09, 2016","rarity":"uncommon"},"sometimes":{"title":"Sometimes","type":"Pearl Jam Original","timesPlayed":89,"firstPlayed":"Sep. 14, 1996","lastPlayed":"Sep. 27, 2024","rarity":"regular"},"song of good hope":{"title":"Song of Good Hope","type":"Cover","timesPlayed":5,"firstPlayed":"Aug. 26, 2024","lastPlayed":"Sep. 29, 2024","rarity":"ultra-rare"},"soon forget":{"title":"Soon Forget","type":"Pearl Jam Original","timesPlayed":55,"firstPlayed":"May. 10, 2000","lastPlayed":"May. 10, 2016","rarity":"regular"},"speed of sound":{"title":"Speed of Sound","type":"Pearl Jam Original","timesPlayed":7,"firstPlayed":"Oct. 28, 2009","lastPlayed":"May. 08, 2016","rarity":"rare"},"spin the black circle":{"title":"Spin The Black Circle","type":"Pearl Jam Original","timesPlayed":199,"firstPlayed":"Mar. 06, 1994","lastPlayed":"May. 08, 2025","rarity":"staple"},"state of love and trust":{"title":"State Of Love And Trust","type":"Pearl Jam Original","timesPlayed":415,"firstPlayed":"May. 25, 1991","lastPlayed":"May. 16, 2025","rarity":"staple"},"suggestion":{"title":"Suggestion","type":"Cover","timesPlayed":38,"firstPlayed":"Sep. 30, 1991","lastPlayed":"Jun. 22, 2024","rarity":"uncommon"},"superblood wolfmoon":{"title":"Superblood Wolfmoon","type":"Pearl Jam Original","timesPlayed":17,"firstPlayed":"Sep. 18, 2021","lastPlayed":"Sep. 17, 2024","rarity":"uncommon"},"supersonic":{"title":"Supersonic","type":"Pearl Jam Original","timesPlayed":19,"firstPlayed":"Aug. 18, 2009","lastPlayed":"Nov. 17, 2015","rarity":"uncommon"},"swallowed whole":{"title":"Swallowed Whole","type":"Pearl Jam Original","timesPlayed":15,"firstPlayed":"Oct. 12, 2013","lastPlayed":"Apr. 26, 2016","rarity":"rare"},"take the long way":{"title":"Take The Long Way","type":"Pearl Jam Original","timesPlayed":7,"firstPlayed":"Sep. 18, 2021","lastPlayed":"Sep. 02, 2023","rarity":"rare"},"tearing":{"title":"Tearing","type":"Cover","timesPlayed":28,"firstPlayed":"Aug. 15, 1992","lastPlayed":"Apr. 11, 1994","rarity":"uncommon"},"the end":{"title":"The End","type":"Pearl Jam Original","timesPlayed":27,"firstPlayed":"Aug. 11, 2009","lastPlayed":"Jul. 01, 2018","rarity":"uncommon"},"the fixer":{"title":"The Fixer","type":"Pearl Jam Original","timesPlayed":95,"firstPlayed":"Aug. 08, 2009","lastPlayed":"Mar. 13, 2018","rarity":"regular"},"the long road":{"title":"The Long Road","type":"Pearl Jam Original","timesPlayed":99,"firstPlayed":"Jun. 16, 1995","lastPlayed":"May. 08, 2025","rarity":"regular"},"the real me":{"title":"The Real Me","type":"Cover","timesPlayed":42,"firstPlayed":"Sep. 04, 1993","lastPlayed":"May. 10, 2016","rarity":"uncommon"},"thin air":{"title":"Thin Air","type":"Pearl Jam Original","timesPlayed":44,"firstPlayed":"Oct. 30, 1999","lastPlayed":"May. 28, 2024","rarity":"uncommon"},"throw your arms around me":{"title":"Throw Your Arms Around Me","type":"Cover","timesPlayed":28,"firstPlayed":"Jun. 25, 1992","lastPlayed":"Nov. 18, 2024","rarity":"uncommon"},"throw your hatred down":{"title":"Throw Your Hatred Down","type":"Performed With Other Artist","timesPlayed":18,"firstPlayed":"Oct. 21, 2006","lastPlayed":"Sep. 22, 2022","rarity":"uncommon"},"thumbing my way":{"title":"Thumbing My Way","type":"Pearl Jam Original","timesPlayed":52,"firstPlayed":"Dec. 06, 2002","lastPlayed":"Sep. 18, 2023","rarity":"regular"},"timeless melody":{"title":"Timeless Melody","type":"Cover","timesPlayed":10,"firstPlayed":"May. 29, 2000","lastPlayed":"Oct. 08, 2004","rarity":"rare"},"tremor christ":{"title":"Tremor Christ","type":"Pearl Jam Original","timesPlayed":86,"firstPlayed":"Nov. 30, 1993","lastPlayed":"May. 03, 2025","rarity":"regular"},"u":{"title":"U","type":"Pearl Jam Original","timesPlayed":25,"firstPlayed":"Oct. 11, 2000","lastPlayed":"Aug. 29, 2024","rarity":"uncommon"},"ukulele anthem":{"title":"Ukulele Anthem","type":"Cover","timesPlayed":2,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 06, 2017","rarity":"ultra-rare"},"unemployable":{"title":"Unemployable","type":"Pearl Jam Original","timesPlayed":47,"firstPlayed":"Apr. 20, 2006","lastPlayed":"Sep. 19, 2023","rarity":"uncommon"},"unthought known":{"title":"Unthought Known","type":"Pearl Jam Original","timesPlayed":145,"firstPlayed":"Sep. 21, 2009","lastPlayed":"May. 11, 2025","rarity":"regular"},"untitled":{"title":"Untitled","type":"Pearl Jam Original","timesPlayed":55,"firstPlayed":"Sep. 18, 1998","lastPlayed":"May. 13, 2025","rarity":"regular"},"upper hand":{"title":"Upper Hand","type":"Pearl Jam Original","timesPlayed":23,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 16, 2025","rarity":"uncommon"},"wma":{"title":"W.M.A.","type":"Pearl Jam Original","timesPlayed":119,"firstPlayed":"May. 13, 1993","lastPlayed":"Jul. 11, 2024","rarity":"regular"},"waiting for stevie":{"title":"Waiting for Stevie","type":"Pearl Jam Original","timesPlayed":19,"firstPlayed":"May. 10, 2024","lastPlayed":"May. 13, 2025","rarity":"uncommon"},"wash":{"title":"Wash","type":"Pearl Jam Original","timesPlayed":100,"firstPlayed":"Feb. 01, 1991","lastPlayed":"Aug. 26, 2024","rarity":"regular"},"wasted reprise":{"title":"Wasted Reprise","type":"Pearl Jam Original","timesPlayed":88,"firstPlayed":"May. 10, 2006","lastPlayed":"Aug. 22, 2024","rarity":"regular"},"whale song":{"title":"Whale Song","type":"Pearl Jam Original","timesPlayed":1,"firstPlayed":"Sep. 27, 2024","lastPlayed":"Sep. 27, 2024","rarity":"once-ever"},"whipping":{"title":"Whipping","type":"Pearl Jam Original","timesPlayed":184,"firstPlayed":"May. 13, 1993","lastPlayed":"Sep. 18, 2023","rarity":"staple"},"who ever said":{"title":"Who Ever Said","type":"Pearl Jam Original","timesPlayed":21,"firstPlayed":"Oct. 01, 2021","lastPlayed":"Sep. 27, 2024","rarity":"uncommon"},"who you are":{"title":"Who You Are","type":"Pearl Jam Original","timesPlayed":45,"firstPlayed":"Sep. 14, 1996","lastPlayed":"Sep. 19, 2023","rarity":"uncommon"},"why go":{"title":"Why Go","type":"Pearl Jam Original","timesPlayed":499,"firstPlayed":"Dec. 22, 1990","lastPlayed":"May. 18, 2025","rarity":"staple"},"wildflowers":{"title":"Wildflowers","type":"Cover","timesPlayed":1,"firstPlayed":"Aug. 31, 2023","lastPlayed":"Aug. 31, 2023","rarity":"once-ever"},"wishlist":{"title":"Wishlist","type":"Pearl Jam Original","timesPlayed":265,"firstPlayed":"Nov. 12, 1997","lastPlayed":"May. 18, 2025","rarity":"staple"},"without you":{"title":"Without You","type":"Performed By Other Artist","timesPlayed":14,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 09, 2019","rarity":"rare"},"wont tell":{"title":"Won't Tell","type":"Pearl Jam Original","timesPlayed":14,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 08, 2025","rarity":"rare"},"world wide suicide":{"title":"World Wide Suicide","type":"Pearl Jam Original","timesPlayed":115,"firstPlayed":"Apr. 20, 2006","lastPlayed":"Jan. 31, 2014","rarity":"regular"},"wreckage":{"title":"Wreckage","type":"Pearl Jam Original","timesPlayed":47,"firstPlayed":"May. 04, 2024","lastPlayed":"May. 18, 2025","rarity":"uncommon"},"yellow ledbetter":{"title":"Yellow Ledbetter","type":"Pearl Jam Original","timesPlayed":414,"firstPlayed":"Feb. 15, 1992","lastPlayed":"May. 18, 2025","rarity":"staple"},"yellow moon":{"title":"Yellow Moon","type":"Pearl Jam Original","timesPlayed":27,"firstPlayed":"Oct. 11, 2013","lastPlayed":"Sep. 06, 2022","rarity":"uncommon"},"you are":{"title":"You Are","type":"Pearl Jam Original","timesPlayed":72,"firstPlayed":"Dec. 05, 2002","lastPlayed":"May. 18, 2024","rarity":"regular"},"youve got to hide your love away":{"title":"You've Got To Hide Your Love Away","type":"Cover","timesPlayed":29,"firstPlayed":"Mar. 06, 2003","lastPlayed":"May. 12, 2022","rarity":"uncommon"},"dont be shy":{"title":"Don't Be Shy","type":"Cover","timesPlayed":4,"firstPlayed":"Oct. 25, 2000","lastPlayed":"May. 30, 2006","rarity":"ultra-rare"},"driftin":{"title":"Driftin'","type":"Cover","timesPlayed":4,"firstPlayed":"May. 17, 1992","lastPlayed":"Oct. 30, 2018","rarity":"ultra-rare"},"girl from the north country":{"title":"Girl From The North Country","type":"Cover","timesPlayed":2,"firstPlayed":"May. 12, 2014","lastPlayed":"Jun. 12, 2019","rarity":"ultra-rare"},"light today":{"title":"Light Today","type":"Performed By Other Artist","timesPlayed":3,"firstPlayed":"Feb. 08, 2014","lastPlayed":"May. 29, 2017","rarity":"ultra-rare"},"more than you know":{"title":"More Than You Know","type":"Performed By Other Artist","timesPlayed":2,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Feb. 25, 2014","rarity":"ultra-rare"},"should i stay or should i go":{"title":"Should I Stay or Should I Go","type":"Cover","timesPlayed":13,"firstPlayed":"May. 07, 2014","lastPlayed":"Jun. 28, 2019","rarity":"rare"},"youre true":{"title":"You're True","type":"Performed By Other Artist","timesPlayed":3,"firstPlayed":"Feb. 08, 2014","lastPlayed":"Jun. 27, 2017","rarity":"ultra-rare"},"walking the cow":{"title":"Walking the Cow","type":"Cover","timesPlayed":3,"firstPlayed":"Oct. 01, 1994","lastPlayed":"Oct. 03, 2009","rarity":"ultra-rare"},"trouble":{"title":"Trouble","type":"Cover","timesPlayed":3,"firstPlayed":"Mar. 03, 1998","lastPlayed":"Aug. 02, 2007","rarity":"ultra-rare"},"dead man":{"title":"Dead Man","type":"Pearl Jam Original","timesPlayed":8,"firstPlayed":"Mar. 09, 1998","lastPlayed":"Aug. 02, 2007","rarity":"rare"},"im one":{"title":"I'm One","type":"Cover","timesPlayed":3,"firstPlayed":"Nov. 24, 1993","lastPlayed":"Nov. 09, 1996","rarity":"ultra-rare"},"waving palms":{"title":"Waving Palms","type":"Cover","timesPlayed":1,"firstPlayed":"Aug. 20, 2016","lastPlayed":"Aug. 20, 2016","rarity":"once-ever"},"brain damage":{"title":"Brain Damage","type":"Cover","timesPlayed":3,"firstPlayed":"Jun. 25, 2010","lastPlayed":"Sep. 15, 2023","rarity":"ultra-rare"},"the ship song":{"title":"The Ship Song","type":"Cover","timesPlayed":2,"firstPlayed":"Jun. 20, 1995","lastPlayed":"Nov. 18, 2024","rarity":"ultra-rare"},"bad":{"title":"Bad","type":"Cover","timesPlayed":2,"firstPlayed":"Sep. 19, 2005","lastPlayed":"Sep. 24, 2005","rarity":"ultra-rare"},"forever young":{"title":"Forever Young","type":"Cover","timesPlayed":1,"firstPlayed":"May. 24, 2006","lastPlayed":"May. 24, 2006","rarity":"once-ever"},"tuolumne":{"title":"Tuolumne","type":"Cover","timesPlayed":2,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Jun. 27, 2017","rarity":"ultra-rare"},"the moon song":{"title":"The Moon Song","type":"Cover","timesPlayed":1,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Feb. 07, 2014","rarity":"once-ever"},"broken heart":{"title":"Broken Heart","type":"Cover","timesPlayed":1,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Feb. 07, 2014","rarity":"once-ever"},"goodbye":{"title":"Goodbye","type":"Cover","timesPlayed":1,"firstPlayed":"Feb. 07, 2014","lastPlayed":"Feb. 07, 2014","rarity":"once-ever"},"drifting":{"title":"Drifting","type":"Pearl Jam Original","timesPlayed":5,"firstPlayed":"Oct. 20, 2001","lastPlayed":"Oct. 24, 2010","rarity":"ultra-rare"}}};
+
+const ALBUM_COVERS = new Set(["ten","vs","vitalogy","nocode","yield","binaural","riotact","lostdogs","pj2006","backspacer","lightningbolt","darkmatter"]);
+function albumCoverPath(albumId) {
+  return `media/albums/${albumId}.jpg`;
+}
+
+// ── Songs DB helpers ─────────────────────────────────────────────────────────
+function normSong(title) {
+  return title.toLowerCase().replace(/[^a-z0-9 ]/g,'').trim();
+}
+function lookupSong(title) {
+  // Direct key lookup
+  const k = normSong(title);
+  if (SONGS_DB.songs[k]) return SONGS_DB.songs[k];
+  // Fuzzy: find a key that contains or is contained
+  const keys = Object.keys(SONGS_DB.songs);
+  for (const key of keys) {
+    if (key === k || key.startsWith(k) || k.startsWith(key)) return SONGS_DB.songs[key];
+  }
+  return null;
+}
+function rarityChip(timesPlayed) {
+  if (!timesPlayed) return '';
+  let cls, label;
+  if (timesPlayed === 1)       { cls='chip-once';    label=`1× ever`; }
+  else if (timesPlayed <= 5)   { cls='chip-ultra';   label=`${timesPlayed}× ever`; }
+  else if (timesPlayed <= 15)  { cls='chip-rare';    label=`${timesPlayed}× ever`; }
+  else if (timesPlayed <= 50)  { cls='chip-uncommon';label=`${timesPlayed}× ever`; }
+  else if (timesPlayed <= 150) { cls='chip-regular'; label=`${timesPlayed}× ever`; }
+  else                         { cls='chip-staple';  label=`${timesPlayed}× ever`; }
+  return `<span class="rarity-chip ${cls}" title="Tocada ${timesPlayed}× na carreira">${label}</span>`;
+}
+function luckScore(songList) {
+  // Lower avg timesPlayed = luckier
+  const vals = songList.map(s => {
+    const d = lookupSong(s);
+    return d && d.timesPlayed > 0 ? d.timesPlayed : null;
+  }).filter(v => v !== null);
+  if (!vals.length) return null;
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  // Invert: max career plays ~930, normalize to 0-100 where lower avg = higher score
+  const score = Math.max(0, Math.min(100, Math.round(100 - (avg/930)*100)));
+  return { score, avgCareerPlays: Math.round(avg), sampleSize: vals.length };
+}
+
+const MEDIA_MANIFEST = {"pj-2011-11-09":{"poster":true,"photos":6},"pj-2013-04-03":{"poster":true,"photos":8},"pj-2005-12-02":{"poster":true,"photos":7},"pj-2013-04-06":{"poster":true,"photos":8},"pj-2011-11-03":{"poster":true,"photos":6},"pj-2011-11-06":{"poster":true,"photos":7},"pj-2013-03-31":{"poster":true,"photos":19},"pj-2015-11-17":{"poster":true,"photos":13},"pj-2015-11-14":{"poster":true,"photos":15},"pj-2015-11-11":{"poster":true,"photos":8,"highlight_photos":[6,8]},"pj-2011-11-04":{"poster":true,"photos":6},"pj-2015-11-20":{"photos":8},"pj-2015-11-22":{"photos":9},"pj-2018-03-21":{"photos":12},"pj-2018-03-24":{"photos":10},"pj-2024-08-29":{"poster":true,"posters":3,"photos":13},"pj-2024-08-31":{"poster":true,"posters":2,"photos":15},"ev-2014-05-06":{"photos":8}};
+
+// ========================================================================
+// LOOKUPS
+// ========================================================================
+const SONG_TO_ALBUM = {};
+ALBUMS.forEach(a => a.songs.forEach(s => { if (!SONG_TO_ALBUM[s]) SONG_TO_ALBUM[s] = a; }));
+function getAlbum(song) { return SONG_TO_ALBUM[song] || null; }
+function getAlbumTitle(song) { const a = getAlbum(song); return a ? a.title : "—"; }
+function splitMedley(s) { return s.includes(" → ") ? s.split(" → ").map(x => x.trim()) : [s]; }
+function hasMedia(showId) { return !!MEDIA_MANIFEST[showId]; }
+function mediaInfo(showId) { return MEDIA_MANIFEST[showId] || null; }
+function mediaPath(showId, file) { return `media/${showId}/${file}`; }
+function mediaIndicator(showId) {
+  const m = MEDIA_MANIFEST[showId];
+  if (!m) return '';
+  const parts = [];
+  if (m.poster || m.photos) parts.push('📷');
+  if (m.my_photos) parts.push('★');
+  if (m.videos) parts.push('▶');
+  return parts.length ? ' · ' + parts.join('') : '';
+}
+
+// ========================================================================
+// STATE
+// ========================================================================
+const state = {
+  filterArtist: "all",
+  filterYear: "all",
+  currentView: "timeline"
+};
+
+// ========================================================================
+// COMPUTED
+// ========================================================================
+function filteredShows() {
+  return SHOWS.filter(s => {
+    if (state.filterArtist !== "all" && s.artist !== state.filterArtist) return false;
+    if (state.filterYear !== "all" && s.date.slice(0,4) !== state.filterYear) return false;
+    return true;
+  }).sort((a,b) => a.date.localeCompare(b.date));
+}
+function songFrequency() {
+  const freq = {};
+  filteredShows().forEach(show => {
+    // Músicas do setlist principal
+    show.songs.forEach(song => {
+      splitMedley(song).forEach(part => {
+        if (!freq[part]) freq[part] = { song: part, count: 0, shows: [], artists: new Set(), soundcheckShows: [] };
+        freq[part].count++;
+        if (!freq[part].shows.includes(show.id)) freq[part].shows.push(show.id);
+        freq[part].artists.add(show.artist);
+      });
+    });
+    // Músicas de soundcheck (contam como ouvidas!)
+    if (show.soundcheck) {
+      show.soundcheck.forEach(song => {
+        splitMedley(song).forEach(part => {
+          if (!freq[part]) freq[part] = { song: part, count: 0, shows: [], artists: new Set(), soundcheckShows: [] };
+          freq[part].count++;
+          if (!freq[part].shows.includes(show.id)) freq[part].shows.push(show.id);
+          if (!freq[part].soundcheckShows.includes(show.id)) freq[part].soundcheckShows.push(show.id);
+          freq[part].artists.add(show.artist);
+        });
+      });
+    }
+  });
+  return Object.values(freq).map(f => ({ ...f, artists: [...f.artists] }));
+}
+
+function allStats() {
+  const shows = filteredShows();
+  const songSet = new Set();
+  let totalSongsPlayed = 0;
+  let soundcheckCount = 0;
+  shows.forEach(s => {
+    totalSongsPlayed += s.songs.length;
+    s.songs.forEach(song => splitMedley(song).forEach(part => songSet.add(part)));
+    if (s.soundcheck) {
+      soundcheckCount += s.soundcheck.length;
+      s.soundcheck.forEach(song => splitMedley(song).forEach(part => songSet.add(part)));
+    }
+  });
+  const years = new Set(shows.map(s => s.date.slice(0,4)));
+  const cities = new Set(shows.map(s => s.city));
+  return {
+    totalShows: shows.length,
+    uniqueSongs: songSet.size,
+    totalPlayed: totalSongsPlayed,
+    soundcheckPlayed: soundcheckCount,
+    years: years.size,
+    cities: cities.size
+  };
+}
+
+// ========================================================================
+// LAZY IMAGE LOADING
+// ========================================================================
+function loadImage(imgEl, src, onLoad) {
+  imgEl.src = src;
+  imgEl.onload = () => {
+    imgEl.classList.add('loaded');
+    if (imgEl.parentElement) imgEl.parentElement.classList.remove('loading');
+    if (onLoad) onLoad();
+  };
+  imgEl.onerror = () => {
+    if (imgEl.parentElement) imgEl.parentElement.classList.remove('loading');
+    console.warn('Failed to load image:', src);
+  };
+}
+
+// Intersection Observer pra lazy-load fotos quando entram em view
+const photoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      const src = img.dataset.src;
+      if (src) {
+        loadImage(img, src);
+        img.removeAttribute('data-src');
+      }
+      photoObserver.unobserve(img);
+    }
+  });
+}, { rootMargin: '100px' });
+
+// ========================================================================
+// RENDER
+// ========================================================================
+function renderStats() {
+  const s = allStats();
+  document.getElementById("stats-strip").innerHTML = `
+    <div class="stat"><div class="stat-value">${s.totalShows}</div><div class="stat-label">Shows</div></div>
+    <div class="stat"><div class="stat-value">${s.uniqueSongs}</div><div class="stat-label">Músicas únicas</div></div>
+    <div class="stat"><div class="stat-value">${s.totalPlayed}</div><div class="stat-label">Total cantado</div></div>
+    <div class="stat"><div class="stat-value">${s.years}</div><div class="stat-label">Anos</div></div>
+    <div class="stat"><div class="stat-value">${s.cities}</div><div class="stat-label">Cidades</div></div>
+  `;
+}
+
+function renderYearFilters() {
+  const years = [...new Set(SHOWS.map(s => s.date.slice(0,4)))].sort();
+  document.getElementById("year-filters").innerHTML =
+    `<button class="filter-chip ${state.filterYear==="all"?"active":""}" data-filter="year" data-value="all">Todos</button>` +
+    years.map(y => `<button class="filter-chip ${state.filterYear===y?"active":""}" data-filter="year" data-value="${y}">${y}</button>`).join("");
+}
+
+function fmtDate(d) {
+  const [y,m,day] = d.split("-");
+  const months = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  return `${day} ${months[parseInt(m,10)-1]} ${y}`;
+}
+
+function renderTimeline() {
+  const shows = filteredShows();
+  const byYear = {};
+  shows.forEach(s => {
+    const y = s.date.slice(0,4);
+    if (!byYear[y]) byYear[y] = [];
+    byYear[y].push(s);
+  });
+  const container = document.getElementById("timeline-content");
+  if (!shows.length) {
+    container.innerHTML = `<p style="color:var(--ink-mute);font-family:var(--font-editorial);font-style:italic;font-size:18px;">Nenhum show pra esse filtro.</p>`;
+    return;
+  }
+  container.innerHTML = Object.keys(byYear).sort().map(year => `
+    <div class="timeline-year">
+      <div class="timeline-year-label">${year}</div>
+      <div class="shows-grid">
+        ${byYear[year].map(s => `
+          <articl<article class="show-card ${s.artist === 'Eddie Vedder' ? 'ev' : ''} ${s.special ? 'special' : ''}" data-show-id="${s.id}">
+            <div class="show-card-artist">${s.artist}</div>
+            <div class="show-card-date">${fmtDate(s.date)}</div>
+            <div class="show-card-venue">${s.venue}</div>
+            <div class="show-card-city">${s.city}</div>
+            ${s.soundcheck ? `<div class="show-card-special-badge">★ Soundcheck presenciado</div>` : ''}
+            <div class="show-card-meta">
+              <span>${s.songs.length} músicas${mediaIndicator(s.id)}${s.soundcheck ? ' +' + s.soundcheck.length + ' SC' : ''}</span>
+              <span class="confidence-badge ${s.confidence}">${s.confidence === "full" ? "completo" : s.confidence === "partial" ? "parcial" : "reconstr."}</span>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+  container.querySelectorAll(".show-card").forEach(c => c.addEventListener("click", () => openDrawer(c.dataset.showId)));
+}
+
+function renderRanking() {
+  const freq = songFrequency().sort((a,b) => b.count - a.count || a.song.localeCompare(b.song));
+  const max = freq[0]?.count || 1;
+  const container = document.getElementById("ranking-content");
+  if (!freq.length) {
+    container.innerHTML = `<p style="color:var(--ink-mute);font-family:var(--font-editorial);font-style:italic;">Nenhuma música pra esse filtro.</p>`;
+    return;
+  }
+  container.innerHTML = freq.map((f, idx) => {
+    const pct = (f.count / max) * 100;
+    const isEvOnly = f.artists.length === 1 && f.artists[0] === "Eddie Vedder";
+    return `
+      <div class="ranking-row ${idx < 3 ? 'top-3' : ''} ${isEvOnly ? 'ev-only' : ''}" data-song="${encodeURIComponent(f.song)}">
+        <div class="ranking-pos">${String(idx+1).padStart(2,'0')}</div>
+        <div>
+          <div class="ranking-song-title">${f.song}</div>
+          <div class="ranking-song-album">${getAlbumTitle(f.song)}</div>
+        </div>
+        <div class="ranking-bar-wrap"><div class="ranking-bar"><div class="ranking-bar-fill" style="width:${pct}%"></div></div></div>
+        <div class="ranking-count">${f.count}×</div>
+      </div>`;
+  }).join("");
+  container.querySelectorAll(".ranking-row").forEach(r => r.addEventListener("click", () => {
+    activateTab("search");
+    document.getElementById("search-song").value = decodeURIComponent(r.dataset.song);
+    renderSearch(decodeURIComponent(r.dataset.song));
+  }));
+}
+
+function renderGaps() {
+  const freq = songFrequency();
+  const heardMap = {};
+  freq.forEach(f => { heardMap[f.song] = f.count; });
+  const container = document.getElementById("gaps-content");
+  const relevant = ALBUMS.filter(a => {
+    if (state.filterArtist === "all") return true;
+    if (a.artist === "Ambos") return true;
+    return a.artist === state.filterArtist;
+  });
+  const classForArtist = a => a.artist === "Pearl Jam" ? "pj" : a.artist === "Eddie Vedder" ? "ev" : "misc";
+  container.innerHTML = relevant.map(album => {
+    const total = album.songs.length;
+    const heard = album.songs.filter(s => heardMap[s]).length;
+    const pct = total ? Math.round(heard / total * 100) : 0;
+    const isComplete = pct === 100;
+    // Cover: cai pro fallback com sigla (ainda não temos arte pra álbuns)
+    const coverInner = ALBUM_COVERS.has(album.id)
+      ? `<div class="album-cover-img-wrap" data-album-id="${album.id}"></div>`
+      : `<div class="album-cover-fallback ${classForArtist(album)}">${(album.abbrev||album.title).replace(/\n/g,'<br>')}</div>`;
+    const songRows = album.songs.map(s => {
+      const cnt = heardMap[s] || 0;
+      return `<div class="album-song ${cnt ? 'heard' : 'never'}"><span>${s}</span><span class="album-song-count">${cnt ? cnt + '×' : 'nunca'}</span></div>`;
+    }).join("");
+    const metaLine = album.year ? `${album.artist} · ${album.year}` : `${album.artist}`;
+    return `
+      <div class="album-block ${isComplete ? 'complete' : ''}">
+        ${isComplete ? '<div class="album-badge-100">100% completo</div>' : ''}
+        <div class="album-main">
+          <div class="album-cover">${coverInner}</div>
+          <div class="album-info-col">
+            <div class="album-title">${album.title}</div>
+            <div class="album-artist-year">${metaLine}</div>
+            <div class="album-progress-wrap">
+              <div class="album-coverage-bar"><div class="album-coverage-fill" style="width:${pct}%"></div></div>
+              ${isComplete ? '' : `<div class="album-coverage-stat">${heard}/${total} · <strong style="color:var(--ink)">${pct}%</strong></div>`}
+            </div>
+          </div>
+        </div>
+        <div class="album-songs">${songRows}</div>
+      </div>`;
+  }).join("");
+  loadAlbumCovers();
+}
+
+function renderHighlights() {
+  const freq = songFrequency().sort((a,b) => b.count - a.count);
+  const shows = filteredShows();
+  const totalSongsPlayed = shows.reduce((acc,s) => acc + s.songs.length, 0);
+  const avgSongs = shows.length ? (totalSongsPlayed / shows.length).toFixed(1) : 0;
+  const longest = shows.reduce((max, s) => s.songs.length > (max?.songs.length || 0) ? s : max, null);
+  const shortest = shows.reduce((min, s) => !min || s.songs.length < min.songs.length ? s : min, null);
+  const mostPlayed = freq[0];
+  const oneHitters = freq.filter(f => f.count === 1).length;
+  const in80pct = freq.filter(f => f.count >= Math.ceil(shows.length * 0.8));
+  const crossoverSongs = freq.filter(f => f.artists.length === 2).length;
+  const onlyPJ = freq.filter(f => f.artists.length === 1 && f.artists[0] === "Pearl Jam").length;
+  const onlyEV = freq.filter(f => f.artists.length === 1 && f.artists[0] === "Eddie Vedder").length;
+
+  document.getElementById("highlights-content").innerHTML = `
+    <div class="highlight-card"><div class="highlight-label">Música que mais ouviu</div><div class="highlight-value">${mostPlayed?.song || "—"}</div><div class="highlight-sub">${mostPlayed?.count || 0}× · ${getAlbumTitle(mostPlayed?.song || "")}</div></div>
+    <div class="highlight-card"><div class="highlight-label">Presentes em 80%+ dos shows</div><div class="highlight-value">${in80pct.length}</div><div class="highlight-sub">${in80pct.length ? in80pct.slice(0,3).map(f=>f.song).join(", ") + (in80pct.length > 3 ? '…' : '') : "nenhuma"}</div></div>
+    <div class="highlight-card"><div class="highlight-label">Show mais longo</div><div class="highlight-value">${longest?.songs.length || 0} músicas</div><div class="highlight-sub">${longest ? longest.venue + ', ' + longest.date : "—"}</div></div>
+    <div class="highlight-card"><div class="highlight-label">Show mais curto</div><div class="highlight-value">${shortest?.songs.length || 0} músicas</div><div class="highlight-sub">${shortest ? shortest.venue + ', ' + shortest.date : "—"}</div></div>
+    <div class="highlight-card"><div class="highlight-label">Média por show</div><div class="highlight-value">${avgSongs}</div><div class="highlight-sub">músicas por noite</div></div>
+    <div class="highlight-card"><div class="highlight-label">Raridades (só 1×)</div><div class="highlight-value">${oneHitters}</div><div class="highlight-sub">músicas únicas no arquivo</div></div>
+    <div class="highlight-card"><div class="highlight-label">Crossover PJ ↔ EV</div><div class="highlight-value">${crossoverSongs}</div><div class="highlight-sub">ouvi em show do PJ <em>e</em> do Eddie solo</div></div>
+    <div class="highlight-card"><div class="highlight-label">Exclusivas Pearl Jam</div><div class="highlight-value">${onlyPJ}</div><div class="highlight-sub">só tocadas com a banda</div></div>
+    <div class="highlight-card"><div class="highlight-label">Exclusivas Eddie solo</div><div class="highlight-value">${onlyEV}</div><div class="highlight-sub">só ouvi nos shows solo</div></div>
+  `;
+}
+
+function renderSearch(query) {
+  const q = (query || document.getElementById("search-song").value).trim().toLowerCase();
+  const results = document.getElementById("search-results");
+  if (!q) {
+    const freq = songFrequency();
+    results.innerHTML = `<div class="search-hint">Digite o nome de uma música. Suas estatísticas atuais: <strong style="color:var(--ink)">${freq.length}</strong> músicas únicas ouvidas.</div>`;
+    return;
+  }
+  const freq = songFrequency();
+  const matches = freq.filter(f => f.song.toLowerCase().includes(q));
+  if (!matches.length) {
+    const catalog = Object.keys(SONG_TO_ALBUM).filter(s => s.toLowerCase().includes(q));
+    if (catalog.length) {
+      results.innerHTML = catalog.slice(0, 20).map(s => `
+        <div class="search-result never">
+          <div class="search-result-title">${s}</div>
+          <div class="search-result-album">${getAlbumTitle(s)}</div>
+          <div class="search-result-count"><em>Você ainda não ouviu essa ao vivo.</em></div>
+        </div>`).join("");
+    } else {
+      results.innerHTML = `<div class="search-hint">Nada encontrado pra "<em>${q}</em>".</div>`;
+    }
+    return;
+  }
+  results.innerHTML = matches.sort((a,b) => b.count - a.count).map(m => {
+    const showEntries = m.shows.map(sid => {
+      const show = SHOWS.find(s => s.id === sid);
+      const wasSoundcheck = m.soundcheckShows && m.soundcheckShows.includes(sid);
+      const wasMainset = show.songs.some(song => splitMedley(song).includes(m.song));
+      const marker = (wasSoundcheck && !wasMainset) ? ' ★SC' : '';
+      return `<span class="search-result-show" data-show-id="${sid}">${show.date.slice(0,4)} · ${show.city.split(',')[0]} · ${show.artist === "Pearl Jam" ? "PJ" : "EV"}${marker}</span>`;
+    }).join("");
+    return `
+      <div class="search-result">
+        <div class="search-result-title">${m.song}</div>
+        <div class="search-result-album">${getAlbumTitle(m.song)}</div>
+        <div class="search-result-count">Ouvida <strong style="color:var(--ink)">${m.count}×</strong></div>
+        <div class="search-result-shows">${showEntries}</div>
+      </div>`;
+  }).join("");
+  results.querySelectorAll(".search-result-show").forEach(el => el.addEventListener("click", () => openDrawer(el.dataset.showId)));
+}
+
+// ========================================================================
+// DRAWER (with lazy image loading + skeleton)
+// ========================================================================
+function openDrawer(showId) {
+  const show = SHOWS.find(s => s.id === showId);
+  if (!show) return;
+  const drawer = document.getElementById("drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
+  const content = document.getElementById("drawer-content");
+
+  drawer.classList.toggle("ev", show.artist === "Eddie Vedder");
+  drawer.classList.toggle("special-show", !!show.special);
+  const confidenceLabel = {
+    full: "Setlist completo e confirmado",
+    partial: "Setlist parcial — algumas músicas reconstruídas",
+    reconstructed: "Setlist reconstruído a partir do padrão da turnê"
+  }[show.confidence];
+
+  // Soundcheck section (músicas ouvidas no ensaio/passagem de som)
+  let soundcheckHtml = '';
+  if (show.soundcheck && show.soundcheck.length) {
+    const rows = show.soundcheck.map((s, i) => `
+      <li>
+        <span class="sc-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="sc-song">${s}${(() => { const d=lookupSong(s); return d?rarityChip(d.timesPlayed):''; })()}</span>
+        <span class="sc-album">${getAlbumTitle(s)}</span>
+      </li>`).join('');
+    soundcheckHtml = `
+      <div class="soundcheck-section">
+        <div class="soundcheck-label">★ Soundcheck (${show.soundcheck.length})</div>
+        <div class="soundcheck-title">Músicas presenciadas na passagem de som — poucos fãs conseguem ouvir isso ao vivo.</div>
+        <ul class="soundcheck-list">${rows}</ul>
+      </div>`;
+  }
+
+  // Not played section (planned mas não tocou)
+  let notPlayedHtml = '';
+  if (show.not_played && show.not_played.length) {
+    notPlayedHtml = `
+      <div class="not-played-section">
+        <span class="not-played-label">Planejadas mas não tocadas</span>
+        <div class="not-played-list">
+          ${show.not_played.map(s => `<span class="not-played-item">${s}</span>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  const media = mediaInfo(showId);
+  let posterHtml = '';
+  let officialPhotosHtml = '';
+  let myPhotosHtml = '';
+  let videosHtml = '';
+
+  if (media) {
+    // Poster(s) oficial
+    if (media.poster) {
+      const posterCount = media.posters || 1;
+      const posterLabel = posterCount > 1 ? `Posters oficiais (${posterCount})` : 'Poster oficial';
+      let posterItems = '';
+      for (let pi = 1; pi <= posterCount; pi++) {
+        const pfile = posterCount > 1 ? `poster-${pi}.jpg` : 'poster.jpg';
+        posterItems += `
+          <div class="drawer-poster-inner loading">
+            <img data-src="${mediaPath(showId, pfile)}" alt="Poster ${pi} ${show.venue}" class="poster-img">
+          </div>`;
+      }
+      posterHtml = `
+        <div class="drawer-section-label">${posterLabel}</div>
+        <div class="drawer-posters-grid" style="display:flex;flex-wrap:wrap;gap:12px;">
+          ${posterItems}
+        </div>`;
+    }
+
+    // Fotos oficiais (pearljam.com)
+    if (media.photos > 0) {
+      const items = [];
+      for (let i = 1; i <= media.photos; i++) {
+        const isMyMoment = media.highlight_photos && media.highlight_photos.includes(i);
+        items.push(`
+          <div class="photo-wrapper loading${isMyMoment ? ' my-moment' : ''}">
+            <img data-src="${mediaPath(showId, `photo-${i}-thumb.jpg`)}" data-full="${mediaPath(showId, `photo-${i}.jpg`)}" alt="Foto oficial ${i}">
+          </div>`);
+      }
+      officialPhotosHtml = `
+        <div class="drawer-section-label">Fotos oficiais (${media.photos})</div>
+        <div class="drawer-photos">${items.join('')}</div>`;
+    }
+
+    // Suas fotos pessoais (mine/)
+    if (media.my_photos > 0) {
+      const items = [];
+      for (let i = 1; i <= media.my_photos; i++) {
+        items.push(`
+          <div class="photo-wrapper loading mine">
+            <img data-src="${mediaPath(showId, `mine/photo-${i}-thumb.jpg`)}" data-full="${mediaPath(showId, `mine/photo-${i}.jpg`)}" alt="Foto pessoal ${i}">
+          </div>`);
+      }
+      myPhotosHtml = `
+        <div class="drawer-section-label my-media">Minhas fotos (${media.my_photos})</div>
+        <div class="drawer-photos">${items.join('')}</div>`;
+    }
+
+    // Vídeos (videos/)
+    if (media.videos && media.videos.length) {
+      const items = media.videos.map((filename, i) => `
+        <div class="video-wrapper">
+          <video controls preload="none" poster="" src="${mediaPath(showId, `videos/${filename}`)}">
+            Seu browser não suporta este vídeo.
+          </video>
+          <div class="video-label">Vídeo ${i + 1}</div>
+        </div>`);
+      videosHtml = `
+        <div class="drawer-section-label my-media">Meus vídeos (${media.videos.length})</div>
+        <div class="drawer-videos">${items.join('')}</div>`;
+    }
+  }
+
+  content.innerHTML = `
+    <div class="drawer-artist">${show.artist}</div>
+    <div class="drawer-date">${fmtDate(show.date)}</div>
+    <div class="drawer-venue">${show.venue}</div>
+    <div class="drawer-city-tour">${show.city} · ${show.tour}</div>
+    ${show.note ? `<div class="drawer-note">${show.note}</div>` : ""}
+    <div class="drawer-section-label">Setlist (${show.songs.length} músicas)</div>
+    <ol class="setlist">
+      ${show.songs.map(s => {
+        const parts = splitMedley(s);
+        if (parts.length === 1) {
+          const dbEntry = lookupSong(s);
+          const chip = dbEntry ? rarityChip(dbEntry.timesPlayed) : '';
+          return `<li><span>${s}${chip}</span><span class="setlist-song-album">${getAlbumTitle(s)}</span></li>`;
+        }
+        const labels = parts.map(p => getAlbumTitle(p)).filter((v,i,a) => a.indexOf(v)===i).join(' · ');
+        const dbEntry = lookupSong(parts[0]);
+        const chip = dbEntry ? rarityChip(dbEntry.timesPlayed) : '';
+        return `<li><span>${s}${chip} <em style="font-size:11px;color:var(--ink-dim);font-style:normal;letter-spacing:0.1em;">MEDLEY</em></span><span class="setlist-song-album">${labels}</span></li>`;
+      }).join("")}
+    </ol>
+    ${soundcheckHtml}
+    ${notPlayedHtml}
+    ${posterHtml}
+    ${officialPhotosHtml}
+    ${myPhotosHtml}
+    ${videosHtml}
+    <div class="drawer-meta">
+      <strong>Confiança:</strong> ${confidenceLabel}<br>
+      <strong>Fonte:</strong> ${show.source}
+    </div>
+  `;
+
+  // Carrega todos os posters direto (sem esperar scroll)
+  content.querySelectorAll('.drawer-poster-inner img[data-src]').forEach(posterImg => {
+    const src = posterImg.dataset.src;
+    posterImg.removeAttribute('data-src');
+    loadImage(posterImg, src);
+    posterImg.addEventListener('click', () => openLightbox(posterImg.src));
+    posterImg.style.cursor = 'zoom-in';
+  });
+
+  // Observer as fotos pra lazy-load
+  content.querySelectorAll('.photo-wrapper img[data-src]').forEach(img => {
+    photoObserver.observe(img);
+    img.addEventListener('click', () => {
+      const full = img.dataset.full;
+      if (full) openLightbox(full);
+    });
+  });
+
+  drawer.classList.add("active");
+  backdrop.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeDrawer() {
+  document.getElementById("drawer").classList.remove("active");
+  document.getElementById("drawer-backdrop").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+// ========================================================================
+// LIGHTBOX
+// ========================================================================
+function openLightbox(src) {
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+  const spinner = document.getElementById("lightbox-spinner");
+  img.classList.remove('loaded');
+  spinner.style.display = 'block';
+  lb.classList.add("active");
+  const tmp = new Image();
+  tmp.onload = () => {
+    img.src = src;
+    img.classList.add('loaded');
+    spinner.style.display = 'none';
+  };
+  tmp.onerror = () => {
+    spinner.style.display = 'none';
+    img.alt = 'Falha ao carregar';
+  };
+  tmp.src = src;
+}
+function closeLightbox() { document.getElementById("lightbox").classList.remove("active"); }
+
+// ========================================================================
+// THEME
+// ========================================================================
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.textContent = theme === "light" ? "☾" : "☀";
+  try { localStorage.setItem("theme", theme); } catch(e) {}
+}
+function getInitialTheme() {
+  try {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved;
+  } catch(e) {}
+  return "dark";
+}
+
+// ========================================================================
+// TABS
+// ========================================================================
+function activateTab(viewName) {
+  state.currentView = viewName;
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === viewName));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "view-" + viewName));
+  renderCurrent();
+}
+
+function renderRarity() {
+  const shows = filteredShows();
+  const container = document.getElementById("rarity-content");
+  if (!shows.length) {
+    container.innerHTML = '<p style="color:var(--ink-mute)">Nenhum show pra esse filtro.</p>';
+    return;
+  }
+
+  // Collect all unique songs heard (mainset only for luck score)
+  const songShowMap = {}; // song -> [{show, timesPlayed}]
+  shows.forEach(show => {
+    show.songs.forEach(raw => {
+      splitMedley(raw).forEach(s => {
+        const db = lookupSong(s);
+        if (!db || !db.timesPlayed) return;
+        if (!songShowMap[s]) songShowMap[s] = [];
+        songShowMap[s].push({ show, timesPlayed: db.timesPlayed });
+      });
+    });
+  });
+
+  // Overall luck score
+  const allSongs = [];
+  shows.forEach(show => show.songs.forEach(raw => splitMedley(raw).forEach(s => allSongs.push(s))));
+  const luck = luckScore(allSongs);
+
+  // Rarest songs caught (sorted by timesPlayed asc, only show top 40)
+  const rareSongs = Object.entries(songShowMap)
+    .map(([song, entries]) => ({
+      song,
+      timesPlayed: entries[0].timesPlayed,
+      shows: entries.map(e => e.show),
+      db: lookupSong(song)
+    }))
+    .sort((a,b) => a.timesPlayed - b.timesPlayed)
+    .filter(e => e.timesPlayed <= 100)
+    .slice(0, 40);
+
+  // Classic songs NOT seen (timesPlayed >= 300, not in André's shows)
+  const heardSongs = new Set(Object.keys(songShowMap).map(s => normSong(s)));
+  const notSeenClassics = Object.values(SONGS_DB.songs)
+    .filter(d => d.timesPlayed >= 300 && !heardSongs.has(normSong(d.title)))
+    .sort((a,b) => b.timesPlayed - a.timesPlayed);
+
+  // Rarest single event (once-ever in career)
+  const onceEver = rareSongs.filter(e => e.timesPlayed === 1);
+  const ultraRare = rareSongs.filter(e => e.timesPlayed > 1 && e.timesPlayed <= 5);
+
+  // Show-by-show luck
+  const showLucks = shows.map(show => {
+    const l = luckScore(show.songs.flatMap(s => splitMedley(s)));
+    return { show, luck: l };
+  }).filter(e => e.luck).sort((a,b) => b.luck.score - a.luck.score);
+
+  const pct = luck ? luck.score : 0;
+  const updatedAt = SONGS_DB.meta.updatedAt;
+
+  container.innerHTML = `
+    <div class="data-source-badge">Dados: pearljam.com/vitalogy/songs · atualizado em ${updatedAt}</div>
+
+    ${luck ? `
+    <div class="luck-hero">
+      <div class="luck-score-circle" style="--pct:${pct}">
+        <div class="luck-score-num">${pct}</div>
+      </div>
+      <div class="luck-meta">
+        <h3>Seu Luck Score geral: ${pct}/100</h3>
+        <p>Média de frequência histórica das músicas que você ouviu: <strong>${luck.avgCareerPlays} plays</strong> por música na carreira do PJ.</p>
+        <p>Quanto mais raro o set, maior o score. Calculado sobre ${luck.sampleSize} músicas.</p>
+      </div>
+    </div>` : ''}
+
+    ${onceEver.length ? `
+    <div class="rarity-section-title">🔴 Once-ever — tocadas 1× na história</div>
+    <div class="rarity-section-sub">Você estava lá quando aconteceu algo único.</div>
+    <table class="rarity-table">
+      <tr><th>Música</th><th>Plays</th><th>Show</th></tr>
+      ${onceEver.map(e => `
+        <tr>
+          <td><div class="rt-song">${e.song}</div><div class="rt-album">${getAlbumTitle(e.song)}</div></td>
+          <td><div class="rt-plays once">1×</div></td>
+          <td><div class="rt-show">${e.shows.map(s => s.date + ' · ' + s.city.split(',')[0]).join('<br>')}</div></td>
+        </tr>`).join('')}
+    </table>` : ''}
+
+    ${ultraRare.length ? `
+    <div class="rarity-section-title">🟠 Ultra-raras — 2 a 5× na carreira</div>
+    <div class="rarity-section-sub">Músicas que quase nunca aparecem nos setlists.</div>
+    <table class="rarity-table">
+      <tr><th>Música</th><th>Plays na carreira</th><th>Show(s)</th></tr>
+      ${ultraRare.map(e => `
+        <tr>
+          <td><div class="rt-song">${e.song}</div><div class="rt-album">${getAlbumTitle(e.song)}</div></td>
+          <td><div class="rt-plays ultra">${e.timesPlayed}×</div></td>
+          <td><div class="rt-show">${e.shows.map(s => s.date + ' · ' + s.city.split(',')[0]).join('<br>')}</div></td>
+        </tr>`).join('')}
+    </table>` : ''}
+
+    <div class="rarity-section-title">📊 Todas as raridades que você pegou</div>
+    <div class="rarity-section-sub">Músicas raras (≤100× na carreira) que você ouviu ao vivo — ordenadas por frequência.</div>
+    <table class="rarity-table">
+      <tr><th>#</th><th>Música</th><th>Plays na carreira</th><th>Tipo</th></tr>
+      ${rareSongs.map((e, i) => `
+        <tr>
+          <td style="color:var(--ink-mute);font-size:12px">${String(i+1).padStart(2,'0')}</td>
+          <td><div class="rt-song">${e.song}</div><div class="rt-album">${getAlbumTitle(e.song)}</div></td>
+          <td>${rarityChip(e.timesPlayed)}</td>
+          <td style="font-size:11px;color:var(--ink-mute)">${e.db ? e.db.type : '—'}</td>
+        </tr>`).join('')}
+    </table>
+
+    <div class="rarity-section-title">🏆 Luck Score por show</div>
+    <div class="rarity-section-sub">Seus shows ordenados do set mais raro ao mais previsível.</div>
+    <table class="rarity-table">
+      <tr><th>Show</th><th>Luck Score</th><th>Média plays/música</th></tr>
+      ${showLucks.map(({ show, luck }) => `
+        <tr>
+          <td>
+            <div class="rt-song">${show.date} · ${show.city.split(',')[0]}</div>
+            <div class="rt-album">${show.tour}</div>
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:${luck.score}px;max-width:100px;height:6px;background:var(--pj);border-radius:3px;"></div>
+              <strong>${luck.score}</strong>
+            </div>
+          </td>
+          <td style="color:var(--ink-mute);font-size:13px">${luck.avgCareerPlays} plays avg</td>
+        </tr>`).join('')}
+    </table>
+
+    ${notSeenClassics.length ? `
+    <div class="rarity-section-title">👀 Clássicos que você ainda não viu ao vivo</div>
+    <div class="rarity-section-sub">Músicas com 300+ plays na carreira que não apareceram nos seus shows.</div>
+    <div class="classics-grid">
+      ${notSeenClassics.map(d => `
+        <div class="classic-card">
+          <div class="cc-plays">${d.timesPlayed}×</div>
+          <div class="cc-song">${d.title}</div>
+          <div class="cc-album">${getAlbumTitle(d.title)}</div>
+        </div>`).join('')}
+    </div>` : ''}
+  `;
+}
+
+
+function loadAlbumCovers() {
+  document.querySelectorAll('.album-cover-img-wrap[data-album-id]').forEach(wrap => {
+    const id = wrap.dataset.albumId;
+    const img = document.createElement('img');
+    img.className = 'album-cover-img';
+    img.alt = id;
+    img.style.cssText = 'opacity:0;transition:opacity 0.3s;width:100%;height:100%;object-fit:cover;border-radius:6px;display:block;';
+    img.onload = () => { img.style.opacity = 1; };
+    img.onerror = () => {
+      // fallback: find album and render text
+      const album = ALBUMS.find(a => a.id === id);
+      if (album) {
+        const cls = album.artist === 'Pearl Jam' ? 'pj' : album.artist === 'Eddie Vedder' ? 'ev' : 'misc';
+        wrap.outerHTML = `<div class="album-cover-fallback ${cls}">${(album.abbrev || album.title).replace(/\n/g,'<br>')}</div>`;
+      }
+    };
+    img.src = albumCoverPath(id);
+    wrap.appendChild(img);
+    wrap.removeAttribute('data-album-id');
+  });
+}
+
+
+function renderGallery() {
+  const container = document.getElementById('gallery-content');
+  const filtersEl  = document.getElementById('gallery-filters');
+
+  // Build list of shows with photos, respecting current artist filter
+  const shows = filteredShows().filter(s => {
+    const m = MEDIA_MANIFEST[s.id];
+    return m && (m.photos > 0 || m.my_photos > 0);
+  });
+
+  if (!shows.length) {
+    container.innerHTML = '<p class="gallery-empty">Nenhum show com fotos para este filtro.</p>';
+    filtersEl.innerHTML = '';
+    return;
+  }
+
+  // Tour filter chips
+  const tours = [...new Set(shows.map(s => s.tour))];
+  filtersEl.innerHTML = `
+    <button class="gallery-filter-chip active" data-tour="all">Todos</button>
+    ${tours.map(t => `<button class="gallery-filter-chip" data-tour="${encodeURIComponent(t)}">${t}</button>`).join('')}
+  `;
+  filtersEl.querySelectorAll('.gallery-filter-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filtersEl.querySelectorAll('.gallery-filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGalleryShows(shows, btn.dataset.tour === 'all' ? null : decodeURIComponent(btn.dataset.tour));
+    });
+  });
+
+  renderGalleryShows(shows, null);
+}
+
+function renderGalleryShows(shows, tourFilter) {
+  const container = document.getElementById('gallery-content');
+  const filtered = tourFilter ? shows.filter(s => s.tour === tourFilter) : shows;
+
+  container.innerHTML = filtered.map(show => {
+    const m = MEDIA_MANIFEST[show.id];
+    const totalPhotos = (m.photos || 0) + (m.my_photos || 0);
+    const isEV = show.artist === 'Eddie Vedder';
+    const accentVar = isEV ? 'var(--ev)' : 'var(--pj)';
+
+    // Build thumb items — official first, then mine
+    let thumbsHtml = '';
+    for (let i = 1; i <= (m.photos || 0); i++) {
+      const thumb = `media/${show.id}/photo-${i}-thumb.jpg`;
+      const full  = `media/${show.id}/photo-${i}.jpg`;
+      const isMyMoment = m.highlight_photos && m.highlight_photos.includes(i);
+      thumbsHtml += `<div class="gallery-thumb${isMyMoment ? ' my-moment' : ''}">
+        <img data-src="${thumb}" data-full="${full}" alt="${show.date} photo ${i}">
+      </div>`;
+    }
+    for (let i = 1; i <= (m.my_photos || 0); i++) {
+      const thumb = `media/${show.id}/mine/photo-${i}-thumb.jpg`;
+      const full  = `media/${show.id}/mine/photo-${i}.jpg`;
+      thumbsHtml += `<div class="gallery-thumb mine-thumb">
+        <img data-src="${thumb}" data-full="${full}" alt="minha foto ${i}">
+      </div>`;
+    }
+
+    return `
+      <div class="gallery-show-block" data-show-id="${show.id}">
+        <div class="gallery-show-header" onclick="openDrawer('${show.id}')">
+          <span class="gallery-show-name" style="color:${accentVar}">${fmtDate(show.date)}</span>
+          <span class="gallery-show-meta">${show.venue} · ${show.city.split(',')[0]}</span>
+          <span class="gallery-show-count">📷 ${totalPhotos}</span>
+        </div>
+        <div class="gallery-grid">${thumbsHtml}</div>
+      </div>`;
+  }).join('');
+
+  // Lazy-load + lightbox
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const img = e.target;
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.add('loaded');
+        observer.unobserve(img);
+      }
+    });
+  }, { rootMargin: '200px' });
+
+  container.querySelectorAll('.gallery-thumb img[data-src]').forEach(img => {
+    observer.observe(img);
+    img.addEventListener('click', () => { if (img.dataset.full) openLightbox(img.dataset.full); });
+  });
+}
+
+function renderCurrent() {
+  switch(state.currentView) {
+    case "timeline": renderTimeline(); break;
+    case "ranking": renderRanking(); break;
+    case "gaps": renderGaps(); break;
+    case "highlights": renderHighlights(); break;
+    case "search": renderSearch(); break;
+    case "rarity": renderRarity(); break;
+    case "gallery": renderGallery(); break;
+  }
+  renderStats();
+}
+
+// ========================================================================
+// INIT
+// ========================================================================
+function hideBootOverlay() {
+  const overlay = document.getElementById("boot-overlay");
+  overlay.classList.add("hidden");
+  setTimeout(() => overlay.remove(), 400);
+}
+
+function updateBootText(text) {
+  const el = document.getElementById("boot-text");
+  if (el) el.textContent = text;
+}
+
+async function init() {
+  updateBootText("Aplicando preferências");
+  applyTheme(getInitialTheme());
+  await new Promise(r => setTimeout(r, 80));
+
+  updateBootText("Carregando arquivo");
+  renderStats();
+  renderYearFilters();
+  await new Promise(r => setTimeout(r, 80));
+
+  updateBootText("Montando timeline");
+  renderTimeline();
+  await new Promise(r => setTimeout(r, 100));
+
+  // Event bindings
+  document.getElementById("theme-toggle").addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => activateTab(t.dataset.view)));
+  document.querySelector(".filter-bar").addEventListener("click", (e) => {
+    const chip = e.target.closest(".filter-chip");
+    if (!chip) return;
+    const type = chip.dataset.filter, val = chip.dataset.value;
+    if (type === "artist") {
+      state.filterArtist = val;
+      document.querySelectorAll('.filter-chip[data-filter="artist"]').forEach(c => {
+        c.classList.remove("active","pj","ev");
+        if (c.dataset.value === val) {
+          c.classList.add("active");
+          if (val === "Pearl Jam") c.classList.add("pj");
+          if (val === "Eddie Vedder") c.classList.add("ev");
+        }
+      });
+    } else if (type === "year") {
+      state.filterYear = val;
+      document.querySelectorAll('.filter-chip[data-filter="year"]').forEach(c => c.classList.toggle("active", c.dataset.value === val));
+    }
+    renderCurrent();
+  });
+  document.getElementById("drawer-close").addEventListener("click", closeDrawer);
+  document.getElementById("drawer-backdrop").addEventListener("click", closeDrawer);
+  document.getElementById("lightbox").addEventListener("click", closeLightbox);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeLightbox(); closeDrawer(); } });
+  document.getElementById("search-song").addEventListener("input", (e) => renderSearch(e.target.value));
+
+  hideBootOverlay();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

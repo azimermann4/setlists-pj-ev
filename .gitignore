@@ -1,0 +1,19 @@
+# Sistema operacional
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Backups locais
+*.zip
+*.7z
+*.tar
+*.tar.gz
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Configuração local de ferramentas
+.claude/
